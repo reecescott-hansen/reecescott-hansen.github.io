@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Portfolio — Reece Scott-Hansen</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    /* ── Platform shell ── */
+    .platform-wrap {
+      background: #0a0f1e;
+      border-radius: 16px;
+      padding: 28px;
+      margin: 28px auto;
+      width: 90%;
+      max-width: 1100px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    .platform-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .platform-brand {
+      font-family: 'Merriweather', serif;
+      font-size: 18px;
+      color: #e2e8f0;
+      letter-spacing: 0.3px;
+    }
+
+    .platform-brand span {
+      color: #60a5fa;
+    }
+
+    .platform-date {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* ── Metric cards ── */
+    .p-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .p-metric {
+      background: #111827;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 14px 16px;
+      transition: border-color 0.2s;
+    }
+
+    .p-metric:hover { border-color: #334155; }
+
+    .p-metric-label {
+      font-size: 10px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .p-metric-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    .p-metric-sub {
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .p-green { color: #4ade80; }
+    .p-red   { color: #f87171; }
+
+    /* ── Tabs ── */
+    .p-tabs {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .p-tab {
+      font-size: 13px;
+      padding: 8px 16px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: #64748b;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.15s;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+
+    .p-tab.active {
+      color: #60a5fa;
+      border-bottom-color: #60a5fa;
+      font-weight: 600;
+    }
+
+    .p-tab:hover:not(.active) { color: #94a3b8; }
+
+    /* ── Panels ── */
+    .p-panel { display: none; }
+    .p-panel.active { display: block; }
+
+    /* ── Chart cards ── */
+    .p-chart-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .p-card {
+      background: #111827;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .p-card-title {
+      font-size: 10px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Holdings table ── */
+    .p-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .p-table th {
+      color: #64748b;
+      font-weight: 400;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 0 8px 10px 8px;
+      text-align: right;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .p-table th:first-child { text-align: left; }
+
+    .p-table td {
+      padding: 10px 8px;
+      text-align: right;
+      border-bottom: 1px solid #0f172a;
+      color: #cbd5e1;
+      vertical-align: middle;
+    }
+
+    .p-table td:first-child { text-align: left; }
+    .p-table tr:last-child td { border-bottom: none; }
+
+    .p-table tr:hover td {
+      background: rgba(255,255,255,0.025);
+    }
+
+    .p-ticker { font-weight: 700; color: #e2e8f0; font-size: 13px; }
+    .p-coname { font-size: 11px; color: #475569; }
+
+    .p-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    /* ── Legend ── */
+    .p-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .p-leg {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .p-leg-sq {
+      width: 8px; height: 8px;
+      border-radius: 2px;
+    }
+
+    @media (max-width: 700px) {
+      .p-chart-row { grid-template-columns: 1fr; }
+      .p-table th:nth-child(3),
+      .p-table td:nth-child(3),
+      .p-table th:nth-child(4),
+      .p-table td:nth-child(4) { display: none; }
+      .platform-wrap { padding: 18px; width: 95%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <nav>
+        <h1>Reece Scott-Hansen's Finance Journal</h1>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="stocks.html">Stock Analysis</a></li>
+          <li><a href="port.html">Portfolio</a></li>
+          <li><a href="ai.html">AI &amp; Markets</a></li>
+          <li><a href="updates.html">Updates</a></li>
+          <li><a href="hire.html">Hire Me</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="market-bar">
+    <a href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" class="market-item">
+      <span class="market-name">S&amp;P 500</span>
+      <span class="market-price">5,396.63</span>
+      <span class="down">▼ 3.46%</span>
+    </a>
+    <a href="https://finance.yahoo.com/quote/%5EIXIC/" target="_blank" class="market-item">
+      <span class="market-name">Nasdaq</span>
+      <span class="market-price">16,387.31</span>
+      <span class="down">▼ 4.31%</span>
+    </a>
+    <a href="https://finance.yahoo.com/quote/%5EDJI/" target="_blank" class="market-item">
+      <span class="market-name">Dow Jones</span>
+      <span class="market-price">39,593.66</span>
+      <span class="down">▼ 2.50%</span>
+    </a>
+  </div>
+  <p class="market-label">Market Snapshot (Not Live Data)</p>
+
+  <!-- ═══════════════════════════════════════════
+       INVESTMENT PLATFORM
+  ════════════════════════════════════════════ -->
+  <div class="platform-wrap">
+
+    <div class="platform-header">
+      <div class="platform-brand">RSH <span>Finance</span> &mdash; Mock Portfolio</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span id="live-badge" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b">
+          <span id="live-dot" style="width:8px;height:8px;border-radius:50%;background:#334155;display:inline-block"></span>
+          <span id="live-label">Loading prices...</span>
+        </span>
+        <span class="platform-date" id="p-timestamp"></span>
+      </div>
+    </div>
+
+    <div class="p-metrics" id="p-metrics"></div>
+
+    <div class="p-tabs">
+      <button class="p-tab active" onclick="pTab('overview',this)">Overview</button>
+      <button class="p-tab" onclick="pTab('holdings',this)">Holdings</button>
+      <button class="p-tab" onclick="pTab('sectors',this)">Sectors</button>
+    </div>
+
+    <!-- Overview -->
+    <div class="p-panel active" id="pp-overview">
+      <div class="p-chart-row">
+        <div class="p-card">
+          <div class="p-card-title">Portfolio value — Jan to Apr 2026</div>
+          <div style="position:relative;height:200px">
+            <canvas id="lineChart" role="img" aria-label="Line chart of portfolio growth Jan to Apr 2026">Portfolio grew from approximately $36,200 to $38,800.</canvas>
+          </div>
+        </div>
+        <div class="p-card">
+          <div class="p-card-title">Allocation by sector</div>
+          <div id="pie-legend" class="p-legend"></div>
+          <div style="position:relative;height:155px">
+            <canvas id="pieChart" role="img" aria-label="Doughnut chart of portfolio allocation by sector">Technology is the largest sector.</canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Holdings -->
+    <div class="p-panel" id="pp-holdings">
+      <div class="p-card">
+        <div class="p-card-title">All holdings</div>
+        <table class="p-table">
+          <thead>
+            <tr>
+              <th>Stock</th>
+              <th style="text-align:left">Sector</th>
+              <th>Shares</th>
+              <th>Buy price</th>
+              <th>Current</th>
+              <th>Value</th>
+              <th>Gain / Loss</th>
+            </tr>
+          </thead>
+          <tbody id="p-holdings-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sectors -->
+    <div class="p-panel" id="pp-sectors">
+      <div class="p-card">
+        <div class="p-card-title">Total value by sector</div>
+        <div style="position:relative;height:280px">
+          <canvas id="barChart" role="img" aria-label="Horizontal bar chart of portfolio value by sector">Technology leads all sectors.</canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- end platform -->
+
+  <!-- Holdings Cards (below platform) -->
+  <section id="portfolio">
+    <div class="container">
+      <h3>Portfolio Details</h3>
+      <div class="card-grid">
+        <div class="card"><h4>Apple (AAPL)</h4><p><strong>Industry:</strong> Technology</p><p><strong>Shares:</strong> 10 &nbsp;|&nbsp; <strong>Buy Price:</strong> $180</p><p>Strong brand and long-term growth driven by loyal customers and expanding services.</p></div>
+        <div class="card"><h4>Amazon (AMZN)</h4><p><strong>Industry:</strong> Technology / Retail</p><p><strong>Shares:</strong> 8 &nbsp;|&nbsp; <strong>Buy Price:</strong> $175</p><p>Leader in online shopping and cloud computing with consistent revenue growth.</p></div>
+        <div class="card"><h4>Microsoft (MSFT)</h4><p><strong>Industry:</strong> Technology</p><p><strong>Shares:</strong> 6 &nbsp;|&nbsp; <strong>Buy Price:</strong> $420</p><p>Steady growth across software, cloud, and AI — one of the most reliable tech stocks.</p></div>
+        <div class="card"><h4>Nike (NKE)</h4><p><strong>Industry:</strong> Consumer</p><p><strong>Shares:</strong> 12 &nbsp;|&nbsp; <strong>Buy Price:</strong> $95</p><p>Global athletic brand with strong international presence and loyal customer base.</p></div>
+        <div class="card"><h4>Morgan Stanley (MS)</h4><p><strong>Industry:</strong> Financial</p><p><strong>Shares:</strong> 8 &nbsp;|&nbsp; <strong>Buy Price:</strong> $85</p><p>Major investment bank — chosen to give my portfolio direct exposure to Wall Street.</p></div>
+        <div class="card"><h4>Coca-Cola (KO)</h4><p><strong>Industry:</strong> Beverage</p><p><strong>Shares:</strong> 15 &nbsp;|&nbsp; <strong>Buy Price:</strong> $60</p><p>Reliable dividend stock with one of the strongest global brands in history.</p></div>
+        <div class="card"><h4>Tesla (TSLA)</h4><p><strong>Industry:</strong> Automotive</p><p><strong>Shares:</strong> 5 &nbsp;|&nbsp; <strong>Buy Price:</strong> $250</p><p>High-growth EV company with strong innovation but high volatility — my riskiest pick.</p></div>
+        <div class="card"><h4>Disney (DIS)</h4><p><strong>Industry:</strong> Entertainment</p><p><strong>Shares:</strong> 7 &nbsp;|&nbsp; <strong>Buy Price:</strong> $110</p><p>Powerful media empire spanning streaming, theme parks, and film worldwide.</p></div>
+        <div class="card"><h4>S&amp;P 500 (SPY)</h4><p><strong>Type:</strong> ETF</p><p><strong>Shares:</strong> 5 &nbsp;|&nbsp; <strong>Price:</strong> $500</p><p>Broad market exposure through the top 500 U.S. companies — my safety net holding.</p></div>
+        <div class="card"><h4>Boeing (BA)</h4><p><strong>Industry:</strong> Aerospace</p><p><strong>Shares:</strong> 6 &nbsp;|&nbsp; <strong>Buy Price:</strong> $210</p><p>Major aerospace and defense company with significant long-term government contracts.</p></div>
+        <div class="card"><h4>Google (GOOGL)</h4><p><strong>Industry:</strong> Technology</p><p><strong>Shares:</strong> 6 &nbsp;|&nbsp; <strong>Buy Price:</strong> $140</p><p>Dominant in search and advertising with fast growth in cloud computing and AI.</p></div>
+        <div class="card"><h4>NVIDIA (NVDA)</h4><p><strong>Industry:</strong> Technology / AI</p><p><strong>Shares:</strong> 4 &nbsp;|&nbsp; <strong>Buy Price:</strong> $900</p><p>The leading chipmaker powering the AI revolution — my highest conviction pick.</p></div>
+        <div class="card"><h4>JPMorgan Chase (JPM)</h4><p><strong>Industry:</strong> Financial</p><p><strong>Shares:</strong> 5 &nbsp;|&nbsp; <strong>Buy Price:</strong> $190</p><p>One of the largest and most stable banks in the world with diverse revenue streams.</p></div>
+        <div class="card"><h4>McDonald's (MCD)</h4><p><strong>Industry:</strong> Consumer / Food</p><p><strong>Shares:</strong> 7 &nbsp;|&nbsp; <strong>Buy Price:</strong> $280</p><p>Global franchise model with consistent revenue and one of the strongest brand names ever.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Reece Scott-Hansen '28 Finance Journal | Built with HTML and CSS</p>
+    </div>
+  </footer>
+
+  <script>
+    const API_KEY = 'd7paulpr01qlb0a9cjhgd7paulpr01qlb0a9cji0';
+
+    const holdings = [
+      { ticker:'AAPL', name:'Apple',          sector:'Technology',    shares:10, buy:180  },
+      { ticker:'AMZN', name:'Amazon',          sector:'Technology',    shares:8,  buy:175  },
+      { ticker:'MSFT', name:'Microsoft',       sector:'Technology',    shares:6,  buy:420  },
+      { ticker:'NVDA', name:'NVIDIA',          sector:'Technology',    shares:4,  buy:900  },
+      { ticker:'GOOGL',name:'Google',          sector:'Technology',    shares:6,  buy:140  },
+      { ticker:'MS',   name:'Morgan Stanley',  sector:'Financial',     shares:8,  buy:85   },
+      { ticker:'JPM',  name:'JPMorgan',        sector:'Financial',     shares:5,  buy:190  },
+      { ticker:'NKE',  name:'Nike',            sector:'Consumer',      shares:12, buy:95   },
+      { ticker:'KO',   name:'Coca-Cola',       sector:'Consumer',      shares:15, buy:60   },
+      { ticker:'MCD',  name:"McDonald's",      sector:'Consumer',      shares:7,  buy:280  },
+      { ticker:'TSLA', name:'Tesla',           sector:'Automotive',    shares:5,  buy:250  },
+      { ticker:'DIS',  name:'Disney',          sector:'Entertainment', shares:7,  buy:110  },
+      { ticker:'BA',   name:'Boeing',          sector:'Aerospace',     shares:6,  buy:210  },
+      { ticker:'SPY',  name:'S&P 500 ETF',     sector:'ETF',           shares:5,  buy:500  },
+    ];
+
+    const sectorColors = {
+      'Technology':'#3b82f6','Financial':'#10b981','Consumer':'#f59e0b',
+      'Automotive':'#ec4899','Entertainment':'#8b5cf6','Aerospace':'#f97316','ETF':'#94a3b8'
+    };
+
+    let lineChart, pieChart, barChart;
+
+    function setLiveStatus(state) {
+      const dot   = document.getElementById('live-dot');
+      const label = document.getElementById('live-label');
+      if (state === 'live') {
+        dot.style.background  = '#4ade80';
+        dot.style.boxShadow   = '0 0 6px #4ade80';
+        dot.style.animation   = 'pulse 2s infinite';
+        label.style.color     = '#4ade80';
+        label.textContent     = 'Live prices';
+        const now = new Date();
+        document.getElementById('p-timestamp').textContent =
+          'Updated ' + now.toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'});
+      } else if (state === 'error') {
+        dot.style.background  = '#f87171';
+        label.style.color     = '#f87171';
+        label.textContent     = 'Using cached prices';
+      }
+    }
+
+    async function fetchPrice(ticker) {
+      const url = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${API_KEY}`;
+      const res  = await fetch(url);
+      const data = await res.json();
+      return data.c || null;
+    }
+
+    function calcAndRender() {
+      holdings.forEach(h => {
+        h.value      = h.shares * h.current;
+        h.cost       = h.shares * h.buy;
+        h.gainDollar = h.value - h.cost;
+        h.gainPct    = (h.current - h.buy) / h.buy * 100;
+      });
+
+      const totalValue = holdings.reduce((s,h) => s + h.value, 0);
+      const totalCost  = holdings.reduce((s,h) => s + h.cost,  0);
+      const totalGain  = totalValue - totalCost;
+      const totalPct   = totalGain / totalCost * 100;
+      const up         = totalGain >= 0;
+
+      document.getElementById('p-metrics').innerHTML = `
+        <div class="p-metric"><div class="p-metric-label">Portfolio Value</div><div class="p-metric-value">$${totalValue.toLocaleString('en-US',{maximumFractionDigits:0})}</div></div>
+        <div class="p-metric"><div class="p-metric-label">Total Invested</div><div class="p-metric-value">$${totalCost.toLocaleString('en-US',{maximumFractionDigits:0})}</div></div>
+        <div class="p-metric"><div class="p-metric-label">Total Gain / Loss</div><div class="p-metric-value ${up?'p-green':'p-red'}">${up?'+':'-'}$${Math.abs(totalGain).toLocaleString('en-US',{maximumFractionDigits:0})}</div><div class="p-metric-sub ${up?'p-green':'p-red'}">${up?'▲':'▼'} ${Math.abs(totalPct).toFixed(2)}%</div></div>
+        <div class="p-metric"><div class="p-metric-label">Holdings</div><div class="p-metric-value">${holdings.length}</div></div>
+      `;
+
+      document.getElementById('p-holdings-body').innerHTML = holdings.map(h => {
+        const u = h.gainDollar >= 0;
+        return `<tr>
+          <td><div class="p-ticker">${h.ticker}</div><div class="p-coname">${h.name}</div></td>
+          <td style="text-align:left"><span class="p-dot" style="background:${sectorColors[h.sector]||'#888'}"></span><span style="font-size:12px;color:#64748b">${h.sector}</span></td>
+          <td>${h.shares}</td>
+          <td>$${h.buy.toFixed(2)}</td>
+          <td>$${h.current.toFixed(2)}</td>
+          <td style="font-weight:700;color:#e2e8f0">$${h.value.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+          <td class="${u?'p-green':'p-red'}">${u?'+':'-'}$${Math.abs(h.gainDollar).toFixed(0)}<br><span style="font-size:11px">${u?'▲':'▼'}${Math.abs(h.gainPct).toFixed(1)}%</span></td>
+        </tr>`;
+      }).join('');
+
+      renderCharts(totalValue);
+    }
+
+    function renderCharts(totalValue) {
+      const sectors = {};
+      holdings.forEach(h => { sectors[h.sector] = (sectors[h.sector]||0) + h.value; });
+      const sLabels = Object.keys(sectors);
+      const sVals   = sLabels.map(l => sectors[l]);
+      const sColors = sLabels.map(l => sectorColors[l]||'#888');
+      const sTotal  = sVals.reduce((a,b)=>a+b,0);
+
+      document.getElementById('pie-legend').innerHTML = sLabels.map((l,i) =>
+        `<span class="p-leg"><span class="p-leg-sq" style="background:${sColors[i]}"></span>${l} ${(sVals[i]/sTotal*100).toFixed(0)}%</span>`
+      ).join('');
+
+      if (lineChart) lineChart.destroy();
+      lineChart = new Chart(document.getElementById('lineChart'), {
+        type:'line',
+        data:{
+          labels:['Jan','Feb','Mar','Apr'],
+          datasets:[{
+            label:'Value', data:[36200,37800,38200,Math.round(totalValue)],
+            borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.07)',
+            fill:true, tension:0.4, pointRadius:5,
+            pointBackgroundColor:'#3b82f6', pointBorderColor:'#0a0f1e',
+            pointBorderWidth:2, borderWidth:2
+          }]
+        },
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          plugins:{legend:{display:false}},
+          scales:{
+            y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',color:'#64748b',font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.06)'}},
+            x:{ticks:{color:'#64748b',font:{size:11}},grid:{display:false},border:{color:'rgba(255,255,255,0.06)'}}
+          }
+        }
+      });
+
+      if (pieChart) pieChart.destroy();
+      pieChart = new Chart(document.getElementById('pieChart'), {
+        type:'doughnut',
+        data:{labels:sLabels,datasets:[{data:sVals,backgroundColor:sColors,borderWidth:3,borderColor:'#0a0f1e'}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' $'+ctx.parsed.toLocaleString('en-US',{maximumFractionDigits:0})}}}}
+      });
+
+      const sorted = sLabels.map((l,i)=>({l,v:sVals[i],c:sColors[i]})).sort((a,b)=>b.v-a.v);
+      if (barChart) barChart.destroy();
+      barChart = new Chart(document.getElementById('barChart'), {
+        type:'bar',
+        data:{labels:sorted.map(s=>s.l),datasets:[{data:sorted.map(s=>s.v),backgroundColor:sorted.map(s=>s.c),borderRadius:5,borderSkipped:false}]},
+        options:{
+          indexAxis:'y',responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' $'+ctx.parsed.x.toLocaleString('en-US',{maximumFractionDigits:0})}}},
+          scales:{
+            x:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'k',color:'#64748b',font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.06)'}},
+            y:{ticks:{color:'#94a3b8',font:{size:12}},grid:{display:false},border:{color:'rgba(255,255,255,0.06)'}}
+          }
+        }
+      });
+    }
+
+    function pTab(name, btn) {
+      document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.p-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('pp-'+name).classList.add('active');
+    }
+
+    const fallback = { AAPL:172, AMZN:183, MSFT:388, NVDA:875, GOOGL:154, MS:93, JPM:198, NKE:81, KO:64, MCD:272, TSLA:241, DIS:96, BA:168, SPY:539 };
+
+    async function loadLivePrices() {
+      try {
+        const results = await Promise.all(holdings.map(h => fetchPrice(h.ticker)));
+        let anyFailed = false;
+        holdings.forEach((h, i) => {
+          if (results[i] && results[i] > 0) {
+            h.current = results[i];
+          } else {
+            h.current = fallback[h.ticker] || h.buy;
+            anyFailed = true;
+          }
+        });
+        setLiveStatus(anyFailed ? 'error' : 'live');
+      } catch(e) {
+        holdings.forEach(h => { h.current = fallback[h.ticker] || h.buy; });
+        setLiveStatus('error');
+      }
+      calcAndRender();
+    }
+
+    const style = document.createElement('style');
+    style.textContent = `@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`;
+    document.head.appendChild(style);
+
+    window.addEventListener('load', loadLivePrices);
+  </script>
+
+</body>
+</html>
