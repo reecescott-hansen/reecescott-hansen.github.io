@@ -418,23 +418,38 @@ footer {
 
 /* MOBILE */
 @media (max-width: 600px) {
-  header h1 { font-size: 15px; }
-  nav ul { gap: 6px; }
-  nav ul li a { font-size: 12px; padding: 5px 11px; }
-  .box { width: 96%; padding: 18px; }
-  .box-content { flex-direction: column; text-align: center; gap: 14px; }
-  .side-img { width: 100px; }
-  .section-box { width: 96%; padding: 18px; }
-  .card-grid { grid-template-columns: 1fr; }
-  .hire-hero { padding: 32px 16px; }
-  .services-grid { grid-template-columns: 1fr 1fr; }
-  .platform-wrap { padding: 16px !important; width: 96% !important; }
+  body { font-size: 13px; }
+  header { padding: 12px 0; }
+  header h1 { font-size: 14px; margin-bottom: 10px; }
+  nav ul { gap: 5px; padding: 0 8px; }
+  nav ul li a { font-size: 11px; padding: 5px 10px; }
+  .box { width: 96%; padding: 14px; }
+  .box-content { flex-direction: column; text-align: center; gap: 10px; }
+  .side-img { width: 80px; }
+  .box h2 { font-size: 15px; }
+  .box p { font-size: 12px; }
+  .section-box { width: 96%; padding: 14px; }
+  .section-box h3 { font-size: 15px; margin-bottom: 10px; }
+  .section-box p { font-size: 12px; line-height: 1.6; margin-bottom: 8px; }
+  h3 { font-size: 15px; }
+  .card { padding: 14px; }
+  .card h4 { font-size: 13px; }
+  .card p { font-size: 12px; }
+  .card-grid { grid-template-columns: 1fr; gap: 10px; }
+  .hire-hero { padding: 26px 14px; }
+  .hire-hero h2 { font-size: 18px; }
+  .hire-hero p { font-size: 12px; }
+  .services-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .service-card { padding: 14px 10px; }
+  .service-card h4 { font-size: 13px; }
+  .service-card p { font-size: 11px; }
+  .platform-wrap { padding: 14px !important; width: 96% !important; }
   .p-chart-row { grid-template-columns: 1fr !important; }
-  .p-table th:nth-child(3),
-  .p-table td:nth-child(3),
-  .p-table th:nth-child(4),
-  .p-table td:nth-child(4) { display: none; }
   .p-metrics { grid-template-columns: 1fr 1fr !important; }
+  .p-table th:nth-child(3), .p-table td:nth-child(3),
+  .p-table th:nth-child(4), .p-table td:nth-child(4) { display: none; }
+  .market-item { padding: 5px 10px; font-size: 12px; }
+  footer { font-size: 11px; padding: 14px 12px; }
 }
 
 /* TABLET */
