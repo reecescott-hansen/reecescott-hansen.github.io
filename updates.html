@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <title>Updates — Reece Scott-Hansen</title>
+  <title>Reece Scott-Hansen '28 Finance Journal</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 
   <header>
     <div class="container">
@@ -14,82 +15,62 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="stocks.html">Stock Analysis</a></li>
           <li><a href="port.html">Portfolio</a></li>
-          <li><a href="ai.html">AI &amp; Markets</a></li>
+          <li><a href="ai.html">AI & Markets</a></li>
           <li><a href="updates.html">Updates</a></li>
-          <li><a href="hire.html">Hire Me</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <div class="market-bar">
-    <a href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" class="market-item">
-      <span class="market-name">S&amp;P 500</span>
-      <span class="market-price">5,396.63</span>
-      <span class="down">▼ 3.46%</span>
-    </a>
-    <a href="https://finance.yahoo.com/quote/%5EIXIC/" target="_blank" class="market-item">
-      <span class="market-name">Nasdaq</span>
-      <span class="market-price">16,387.31</span>
-      <span class="down">▼ 4.31%</span>
-    </a>
-    <a href="https://finance.yahoo.com/quote/%5EDJI/" target="_blank" class="market-item">
-      <span class="market-name">Dow Jones</span>
-      <span class="market-price">39,593.66</span>
-      <span class="down">▼ 2.50%</span>
-    </a>
-  </div>
-  <p class="market-label">Market Snapshot (Not Live Data)</p>
+  <a href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" class="market-item">
+    <span class="market-name">S&amp;P 500</span>
+    <span class="market-price" id="mb-sp500-price">—</span>
+    <span class="up" id="mb-sp500-change">Loading...</span>
+  </a>
+  <a href="https://finance.yahoo.com/quote/%5EIXIC/" target="_blank" class="market-item">
+    <span class="market-name">Nasdaq</span>
+    <span class="market-price" id="mb-nasdaq-price">—</span>
+    <span class="up" id="mb-nasdaq-change">Loading...</span>
+  </a>
+  <a href="https://finance.yahoo.com/quote/%5EDJI/" target="_blank" class="market-item">
+    <span class="market-name">Dow Jones</span>
+    <span class="market-price" id="mb-dow-price">—</span>
+    <span class="up" id="mb-dow-change">Loading...</span>
+  </a>
+</div>
+<p class="market-label">Loading live data...</p>
+<script src="market.js"></script>
 
   <section id="updates">
-    <div class="container">
+  <div class="container">
+    <div class="section-box">
+      <h3>Latest Update</h3>
+      <p>
+        Over the past few weeks, I have continued building my finance website and expanding it into a larger project. What started as a simple homepage has now grown into a multi-page website with sections for stock analysis, my mock portfolio, and project updates. One of my main goals has been to make the website look more professional while also improving my HTML and CSS skills.
+      </p>
 
-      <div class="section-box">
-        <h3>April 2026 — Latest Update</h3>
-        <p>
-          Over the past few weeks, I have continued building my finance website and expanding it into a much larger
-          project. What started as a simple homepage has now grown into a six-page website covering stock analysis,
-          my mock portfolio, AI and markets, project updates, and a new freelance web design page.
-        </p>
-        <p>
-          One of my main goals this month was to make the website look more professional. I updated the design with
-          a cleaner CSS stylesheet, improved fonts, better card layouts, and a consistent color scheme across every page.
-          I also fixed several bugs in the original code including a broken CSS bracket and spelling errors in the About section.
-        </p>
-        <p>
-          I also launched a new <a href="hire.html" style="color: var(--accent); font-weight: 600;">Hire Me page</a>
-          where I am offering freelance web design services to local businesses and people who need a website.
-          This is something I want to grow into a real side business — designing and building websites for clients while
-          I am still in school.
-        </p>
-        <p>
-          Going forward, my goals are to land my first freelance client, keep updating my stock analysis monthly,
-          and continue learning how investing, markets, and web design all connect to my bigger goals in finance.
-        </p>
-      </div>
+      <p>
+        Recently, I added a market snapshot bar at the top of the site to make the homepage feel more like a real finance website. Even though the data is not live, I included it to show the major indexes I am following and to make the site more visually interesting. I also added logos for different companies on the stock analysis page, which helped make each section clearer and more organized.
+      </p>
 
-      <div class="section-box">
-        <h3>March 2026 — Getting Started</h3>
-        <p>
-          This was the month I launched the first version of this website. I built it from scratch using HTML and CSS
-          skills I learned in Web Design class at Columbia Grammar. My initial goal was simple — create a space where
-          I could track the stocks I was researching and document what I was learning about investing.
-        </p>
-        <p>
-          In March I added the first six stock analysis cards, built the basic structure of the site including the
-          header, navigation bar, footer, and market snapshot ticker. It was my first time building a complete
-          multi-page website on my own.
-        </p>
-      </div>
+      <p>
+        Another update I made was expanding my mock portfolio. At first, I only had a few stocks, but now I have added more companies from different industries such as technology, finance, consumer brands, entertainment, and aerospace. This helped me make the portfolio more balanced and also gave me more companies to research and compare.
+      </p>
 
+      <p>
+        As I keep working on this project, I want to continue improving both the design and the content. My next steps are to update my stock analysis more often, improve the layout of some pages, and keep learning how finance, investing, and markets connect to the companies I am studying.
+      </p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <footer>
+<footer>
     <div class="container">
       <p>© 2026 Reece Scott-Hansen '28 Finance Journal | Built with HTML and CSS</p>
     </div>
   </footer>
+
 
 </body>
 </html>

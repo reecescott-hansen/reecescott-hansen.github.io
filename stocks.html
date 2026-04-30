@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <title>Stock Analysis — Reece Scott-Hansen</title>
+  <title>Stock Analysis</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -14,235 +14,249 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="stocks.html">Stock Analysis</a></li>
           <li><a href="port.html">Portfolio</a></li>
-          <li><a href="ai.html">AI &amp; Markets</a></li>
+          <li><a href="ai.html">AI & Markets</a></li>
           <li><a href="updates.html">Updates</a></li>
-          <li><a href="hire.html">Hire Me</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <div class="market-bar">
-    <a href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" class="market-item">
-      <span class="market-name">S&amp;P 500</span>
-      <span class="market-price">5,396.63</span>
-      <span class="down">▼ 3.46%</span>
-    </a>
-    <a href="https://finance.yahoo.com/quote/%5EIXIC/" target="_blank" class="market-item">
-      <span class="market-name">Nasdaq</span>
-      <span class="market-price">16,387.31</span>
-      <span class="down">▼ 4.31%</span>
-    </a>
-    <a href="https://finance.yahoo.com/quote/%5EDJI/" target="_blank" class="market-item">
-      <span class="market-name">Dow Jones</span>
-      <span class="market-price">39,593.66</span>
-      <span class="down">▼ 2.50%</span>
-    </a>
-  </div>
-  <p class="market-label">Market Snapshot (Not Live Data)</p>
+ <div class="market-bar">
+  <a href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" class="market-item">
+    <span class="market-name">S&amp;P 500</span>
+    <span class="market-price" id="mb-sp500-price">—</span>
+    <span class="up" id="mb-sp500-change">Loading...</span>
+  </a>
+  <a href="https://finance.yahoo.com/quote/%5EIXIC/" target="_blank" class="market-item">
+    <span class="market-name">Nasdaq</span>
+    <span class="market-price" id="mb-nasdaq-price">—</span>
+    <span class="up" id="mb-nasdaq-change">Loading...</span>
+  </a>
+  <a href="https://finance.yahoo.com/quote/%5EDJI/" target="_blank" class="market-item">
+    <span class="market-name">Dow Jones</span>
+    <span class="market-price" id="mb-dow-price">—</span>
+    <span class="up" id="mb-dow-change">Loading...</span>
+  </a>
+</div>
+<p class="market-label">Loading live data...</p>
+<script src="market.js"></script>
 
   <section id="stocks">
-    <div class="container">
-      <h3>Stock Analysis</h3>
+  <div class="container">
+    <h3>Stock Analysis</h3>
 
-      <div class="card">
-        <div class="card-header">
-          <img src="apple.png" alt="Apple Logo" class="logo">
-          <h4>Apple (AAPL)</h4>
-        </div>
-        <p><strong>Industry:</strong> Technology</p>
-        <p><strong>Rating:</strong> ★★★★☆</p>
-        <p><strong>What the company does:</strong> Apple is a technology company best known for the iPhone, MacBook, iPad, Apple Watch, and services like Apple Music and iCloud.</p>
-        <p><strong>Why I chose it:</strong> I chose Apple because it is one of the most well-known companies in the world and has a very loyal customer base.</p>
-        <p><strong>Strength:</strong> Apple has a powerful brand, strong product demand, and large cash flow.</p>
-        <p><strong>Risk:</strong> Apple still depends heavily on iPhone sales, which makes it vulnerable if demand slows.</p>
-        <p><strong>My View:</strong> I think Apple is a strong long-term company because it continues to grow while keeping a very strong reputation.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="apple.png" alt="Apple Logo" class="logo">
+        <h4>Apple (AAPL)</h4>
       </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="amazon.png" alt="Amazon Logo" class="logo">
-          <h4>Amazon (AMZN)</h4>
-        </div>
-        <p><strong>Industry:</strong> Technology / Retail</p>
-        <p><strong>Rating:</strong> ★★★★☆</p>
-        <p><strong>What the company does:</strong> Amazon is a major online shopping company that also makes money from cloud computing, streaming, and delivery services.</p>
-        <p><strong>Why I chose it:</strong> Amazon has changed the way people shop and has become one of the biggest businesses in the world.</p>
-        <p><strong>Strength:</strong> Amazon leads in both online retail and cloud computing through AWS.</p>
-        <p><strong>Risk:</strong> Amazon faces pressure from competition and changes in consumer spending habits.</p>
-        <p><strong>My View:</strong> I think Amazon is a very important company to follow because it is involved in so many parts of the economy.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="microsoft.png" alt="Microsoft Logo" class="logo">
-          <h4>Microsoft (MSFT)</h4>
-        </div>
-        <p><strong>Industry:</strong> Technology</p>
-        <p><strong>Rating:</strong> ★★★★★</p>
-        <p><strong>What the company does:</strong> Microsoft develops software, cloud services, and products such as Windows, Office, Xbox, and Azure.</p>
-        <p><strong>Why I chose it:</strong> Microsoft is one of the biggest tech companies and plays a major role in both business and everyday life.</p>
-        <p><strong>Strength:</strong> Steady growth, a dominant cloud business, and global importance in workplaces.</p>
-        <p><strong>Risk:</strong> Technology companies face constant competition and rapidly changing trends.</p>
-        <p><strong>My View:</strong> I think Microsoft is a very strong long-term stock because it has many successful products and services.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="nike.png" alt="Nike Logo" class="logo">
-          <h4>Nike (NKE)</h4>
-        </div>
-        <p><strong>Industry:</strong> Consumer / Apparel</p>
-        <p><strong>Rating:</strong> ★★★★☆</p>
-        <p><strong>What the company does:</strong> Nike is a global sportswear company that sells shoes, clothing, and athletic equipment.</p>
-        <p><strong>Why I chose it:</strong> Nike is a brand that nearly everyone in the world recognizes, which gives it lasting power.</p>
-        <p><strong>Strength:</strong> Nike has strong brand recognition and a worldwide customer base that keeps coming back.</p>
-        <p><strong>Risk:</strong> Sales can slow when consumers spend less money during economic downturns.</p>
-        <p><strong>My View:</strong> Nike is a good company to study because it connects business, marketing, and consumer behavior.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="morganstanley.png" alt="Morgan Stanley Logo" class="logo">
-          <h4>Morgan Stanley (MS)</h4>
-        </div>
-        <p><strong>Industry:</strong> Financial Services</p>
-        <p><strong>Rating:</strong> ★★★★☆</p>
-        <p><strong>What the company does:</strong> Morgan Stanley is a major financial firm involved in investment banking, wealth management, and market services.</p>
-        <p><strong>Why I chose it:</strong> I want to work in finance one day, so studying how major firms like Morgan Stanley operate is important to me.</p>
-        <p><strong>Strength:</strong> Morgan Stanley has a strong reputation and a major role in both investment banking and wealth management.</p>
-        <p><strong>Risk:</strong> Financial companies can be heavily affected by market uncertainty and economic downturns.</p>
-        <p><strong>My View:</strong> Morgan Stanley is a great finance stock to study because it shows how banks and markets connect.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="coca-cola.png" alt="Coca-Cola Logo" class="logo">
-          <h4>Coca-Cola (KO)</h4>
-        </div>
-        <p><strong>Industry:</strong> Beverage</p>
-        <p><strong>Rating:</strong> ★★★★☆</p>
-        <p><strong>What the company does:</strong> Coca-Cola is a global beverage company that sells soft drinks, water, juices, and sports drinks in nearly every country.</p>
-        <p><strong>Why I chose it:</strong> Coca-Cola is one of the most recognizable brands in history and is known for being a reliable dividend stock.</p>
-        <p><strong>Strength:</strong> Extremely strong global brand and consistent demand even during tough economic times.</p>
-        <p><strong>Risk:</strong> Changing health trends and growing competition from healthier beverages could impact long-term demand.</p>
-        <p><strong>My View:</strong> Coca-Cola is a great example of how powerful branding can lead to long-term business success.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="tesla.png" alt="Tesla Logo" class="logo">
-          <h4>Tesla (TSLA)</h4>
-        </div>
-        <p><strong>Industry:</strong> Automotive / Energy</p>
-        <p><strong>Rating:</strong> ★★★☆☆</p>
-        <p><strong>What the company does:</strong> Tesla makes electric vehicles, batteries, and energy storage products.</p>
-        <p><strong>Why I chose it:</strong> Tesla is one of the most talked-about companies in the market and has changed the auto industry.</p>
-        <p><strong>Strength:</strong> Tesla is known for innovation and has a strong influence on the direction of electric vehicles globally.</p>
-        <p><strong>Risk:</strong> Tesla stock can be very volatile and faces growing competition from both legacy automakers and new EV brands.</p>
-        <p><strong>My View:</strong> Tesla is an interesting stock because it has high growth potential but also carries more risk than most companies I follow.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="disney.png" alt="Disney Logo" class="logo">
-          <h4>Disney (DIS)</h4>
-        </div>
-        <p><strong>Industry:</strong> Entertainment</p>
-        <p><strong>Rating:</strong> ★★★★☆</p>
-        <p><strong>What the company does:</strong> Disney is a global entertainment company involved in movies, streaming, theme parks, and media.</p>
-        <p><strong>Why I chose it:</strong> Disney is one of the strongest entertainment brands in the world with a wide variety of revenue sources.</p>
-        <p><strong>Strength:</strong> Disney has many business segments and one of the most powerful brand names ever built.</p>
-        <p><strong>Risk:</strong> Streaming competition and changing entertainment habits can affect Disney's performance.</p>
-        <p><strong>My View:</strong> Disney is a strong company to analyze because it combines media, business, and global consumer appeal all in one.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="s&p.png" alt="S&P 500" class="logo">
-          <h4>S&amp;P 500 (SPY)</h4>
-        </div>
-        <p><strong>Type:</strong> ETF / Market Index</p>
-        <p><strong>Rating:</strong> ★★★★★</p>
-        <p><strong>What it is:</strong> The S&amp;P 500 tracks 500 of the largest U.S. companies and provides a broad picture of the overall stock market.</p>
-        <p><strong>Why I chose it:</strong> The S&amp;P 500 is one of the best ways to understand the overall U.S. market at a glance.</p>
-        <p><strong>Strength:</strong> Diversified across many industries, reducing risk compared to individual stocks.</p>
-        <p><strong>Risk:</strong> If the overall market falls, the S&amp;P 500 falls too — there is no protection from broad market downturns.</p>
-        <p><strong>My View:</strong> The S&amp;P 500 is one of the most important things to study because it reflects the entire market.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="boeing.png" alt="Boeing Logo" class="logo">
-          <h4>Boeing (BA)</h4>
-        </div>
-        <p><strong>Industry:</strong> Aerospace</p>
-        <p><strong>Rating:</strong> ★★★☆☆</p>
-        <p><strong>What the company does:</strong> Boeing is a major aerospace company that makes airplanes, defense products, and space technology.</p>
-        <p><strong>Why I chose it:</strong> Boeing is one of the most important industrial companies in the world and gives exposure to the defense sector.</p>
-        <p><strong>Strength:</strong> Boeing has a major role in aviation and defense, which gives it long-term strategic importance.</p>
-        <p><strong>Risk:</strong> Boeing has struggled with safety issues, production delays, and lawsuits in recent years.</p>
-        <p><strong>My View:</strong> Boeing is an interesting case study because it shows how even massive companies can face serious risk when quality control fails.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="google.png" alt="Google Logo" class="logo">
-          <h4>Google (GOOGL)</h4>
-        </div>
-        <p><strong>Industry:</strong> Technology</p>
-        <p><strong>Rating:</strong> ★★★★★</p>
-        <p><strong>What the company does:</strong> Google is a technology company known for search, advertising, YouTube, cloud services, and artificial intelligence.</p>
-        <p><strong>Why I chose it:</strong> Google plays a huge role in the digital world and keeps growing into new areas like AI and healthcare.</p>
-        <p><strong>Strength:</strong> Dominant in search advertising and growing fast in cloud computing and AI.</p>
-        <p><strong>Risk:</strong> Government regulation and strong competition in AI could challenge Google's dominance.</p>
-        <p><strong>My View:</strong> Google is one of the strongest companies to study because it touches nearly every part of modern life.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="nvidia.png" alt="NVIDIA Logo" class="logo">
-          <h4>NVIDIA (NVDA)</h4>
-        </div>
-        <p><strong>Industry:</strong> Technology / AI</p>
-        <p><strong>Rating:</strong> ★★★★☆</p>
-        <p><strong>What the company does:</strong> NVIDIA designs computer chips (GPUs) that are critical for gaming, artificial intelligence, and data centers.</p>
-        <p><strong>Why I chose it:</strong> NVIDIA has become one of the most important companies in the growth of AI technology.</p>
-        <p><strong>Strength:</strong> NVIDIA's chips power most of the world's AI systems, making it nearly impossible to replace right now.</p>
-        <p><strong>Risk:</strong> Very high expectations are priced into the stock, which can make it volatile when results disappoint.</p>
-        <p><strong>My View:</strong> NVIDIA is at the center of the AI revolution, which makes it one of the most exciting companies to follow.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="jpmorgan.png" alt="JPMorgan Logo" class="logo">
-          <h4>JPMorgan Chase (JPM)</h4>
-        </div>
-        <p><strong>Industry:</strong> Financial</p>
-        <p><strong>Rating:</strong> ★★★★☆</p>
-        <p><strong>What the company does:</strong> JPMorgan Chase is one of the largest banks in the world, providing banking, investing, and financial services globally.</p>
-        <p><strong>Why I chose it:</strong> JPMorgan is one of the strongest and most stable finance companies and is important to my goal of working in finance.</p>
-        <p><strong>Strength:</strong> Massive global presence and a diversified business across consumer banking, investment banking, and asset management.</p>
-        <p><strong>Risk:</strong> Banks are sensitive to interest rate changes, economic recessions, and market volatility.</p>
-        <p><strong>My View:</strong> JPMorgan is a great company to analyze because it shows how major banks influence the broader economy.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <img src="mcdonalds.png" alt="McDonald's Logo" class="logo">
-          <h4>McDonald's (MCD)</h4>
-        </div>
-        <p><strong>Industry:</strong> Consumer / Food</p>
-        <p><strong>Rating:</strong> ★★★★☆</p>
-        <p><strong>What the company does:</strong> McDonald's is a global fast-food company operating restaurants in over 100 countries through a franchise model.</p>
-        <p><strong>Why I chose it:</strong> McDonald's is one of the most recognizable and consistent global brands, which makes it a reliable company to study.</p>
-        <p><strong>Strength:</strong> The franchise model generates steady revenue and the brand is trusted in almost every market worldwide.</p>
-        <p><strong>Risk:</strong> Changing food preferences and rising costs can put pressure on margins.</p>
-        <p><strong>My View:</strong> McDonald's is a perfect example of how a strong business model and brand consistency can lead to decades of success.</p>
-      </div>
-
+      <p><strong>Industry:</strong> Technology</p>
+      <p><strong>Rating:</strong> ★★★★☆</p>
+      <p><strong>What the company does:</strong> Apple is a technology company best known for the iPhone, MacBook, iPad, Apple Watch, and services like Apple Music and iCloud.</p>
+      <p><strong>Why I chose it:</strong> I chose Apple because it is one of the most well-known companies in the world and has a very loyal customer base.</p>
+      <p><strong>Strength:</strong> Apple has a powerful brand, strong product demand, and large cash flow.</p>
+      <p><strong>Risk:</strong> One risk is that Apple still depends heavily on iPhone sales.</p>
+      <p><strong>My View:</strong> I think Apple is a strong long-term company because it continues to grow while keeping a very strong reputation.</p>
     </div>
-  </section>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="amazon.png" alt="Amazon Logo" class="logo">
+        <h4>Amazon (AMZN)</h4>
+      </div>
+      <p><strong>Industry:</strong> Technology / Retail</p>
+      <p><strong>Rating:</strong> ★★★★☆</p>
+      <p><strong>What the company does:</strong> Amazon is a major online shopping company, but it also makes money from cloud computing, streaming, and delivery services.</p>
+      <p><strong>Why I chose it:</strong> I chose Amazon because it has changed the way people shop and has become one of the biggest businesses in the world.</p>
+      <p><strong>Strength:</strong> Amazon is strong because of its size, wide range of services, and leadership in online retail and cloud computing.</p>
+      <p><strong>Risk:</strong> A risk is that Amazon faces a lot of pressure from competition and changing consumer spending.</p>
+      <p><strong>My View:</strong> I think Amazon is a very important company to follow because it is involved in many parts of the economy.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="microsoft.png" alt="Microsoft Logo" class="logo">
+        <h4>Microsoft (MSFT)</h4>
+      </div>
+      <p><strong>Industry:</strong> Technology</p>
+      <p><strong>Rating:</strong> ★★★★★</p>
+      <p><strong>What the company does:</strong> Microsoft develops software, cloud services, and technology products such as Windows, Office, Xbox, and Azure.</p>
+      <p><strong>Why I chose it:</strong> I chose Microsoft because it is one of the biggest technology companies and plays a big role in both business and everyday life.</p>
+      <p><strong>Strength:</strong> Microsoft is strong because of its steady growth, cloud business, and importance in workplaces around the world.</p>
+      <p><strong>Risk:</strong> A risk is that technology companies face constant competition and changing trends.</p>
+      <p><strong>My View:</strong> I think Microsoft is a very strong long-term stock because it has many successful products and services.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="nike.png" alt="Nike Logo" class="logo">
+        <h4>Nike (NKE)</h4>
+      </div>
+      <p><strong>Industry:</strong> Consumer / Apparel</p>
+      <p><strong>Rating:</strong> ★★★★☆</p>
+      <p><strong>What the company does:</strong> Nike is a global sportswear company that sells shoes, clothing, and athletic equipment.</p>
+      <p><strong>Why I chose it:</strong> I chose Nike because it is a powerful brand that many people around the world recognize.</p>
+      <p><strong>Strength:</strong> Nike has strong brand recognition and a worldwide customer base.</p>
+      <p><strong>Risk:</strong> A risk is that sales can slow when consumers spend less money.</p>
+      <p><strong>My View:</strong> I think Nike is a good company to study because it connects business, marketing, and consumer behavior.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="morganstanley.png" alt="Morgan Stanley Logo" class="logo">
+        <h4>Morgan Stanley (MS)</h4>
+      </div>
+      <p><strong>Industry:</strong> Financial Services</p>
+      <p><strong>Rating:</strong> ★★★★☆</p>
+      <p><strong>What the company does:</strong> Morgan Stanley is a major financial company involved in investment banking, wealth management, and market services.</p>
+      <p><strong>Why I chose it:</strong> I chose Morgan Stanley because I want to learn more about finance and better understand how major financial firms operate.</p>
+      <p><strong>Strength:</strong> Morgan Stanley has a strong reputation and a major role in both investment banking and wealth management.</p>
+      <p><strong>Risk:</strong> A risk is that financial companies can be affected by market uncertainty and economic downturns.</p>
+      <p><strong>My View:</strong> I think Morgan Stanley is a strong finance stock to study because it shows how banks and markets connect.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="coca-cola.png" alt="Coca-Cola Logo" class="logo">
+        <h4>Coca-Cola (KO)</h4>
+      </div>
+      <p><strong>Industry:</strong> Beverage</p>
+      <p><strong>Rating:</strong> ★★★★☆</p>
+      <p><strong>What the company does:</strong> Coca-Cola is a global beverage company that sells soft drinks, water, juices, and sports drinks.</p>
+      <p><strong>Why I chose it:</strong> I chose Coca-Cola because it is one of the most recognizable brands in the world.</p>
+      <p><strong>Strength:</strong> Coca-Cola has a very strong global brand and consistent demand.</p>
+      <p><strong>Risk:</strong> A risk is that changing health trends may affect demand for some of its products.</p>
+      <p><strong>My View:</strong> I think Coca-Cola is a reliable company to study because it shows how strong branding can lead to long-term success.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="tesla.png" alt="Tesla Logo" class="logo">
+        <h4>Tesla (TSLA)</h4>
+      </div>
+      <p><strong>Industry:</strong> Automotive / Energy</p>
+      <p><strong>Rating:</strong> ★★★☆☆</p>
+      <p><strong>What the company does:</strong> Tesla makes electric vehicles, batteries, and energy products.</p>
+      <p><strong>Why I chose it:</strong> I chose Tesla because it is one of the most talked-about companies in the market and has changed the car industry.</p>
+      <p><strong>Strength:</strong> Tesla is known for innovation and strong influence in electric vehicles.</p>
+      <p><strong>Risk:</strong> A risk is that Tesla can be very volatile and faces strong competition.</p>
+      <p><strong>My View:</strong> I think Tesla is an interesting stock because it has high growth potential but also more risk than some other companies.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="disney.png" alt="Disney Logo" class="logo">
+        <h4>Disney (DIS)</h4>
+      </div>
+      <p><strong>Industry:</strong> Entertainment</p>
+      <p><strong>Rating:</strong> ★★★★☆</p>
+      <p><strong>What the company does:</strong> Disney is a global entertainment company involved in movies, streaming, theme parks, and media.</p>
+      <p><strong>Why I chose it:</strong> I chose Disney because it is one of the strongest entertainment brands in the world.</p>
+      <p><strong>Strength:</strong> Disney has many business segments and a very powerful brand name.</p>
+      <p><strong>Risk:</strong> A risk is that entertainment demand and streaming competition can affect performance.</p>
+      <p><strong>My View:</strong> I think Disney is a strong company to analyze because it combines media, business, and global consumer appeal.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="dowjones.png" alt="Dow Jones Logo" class="logo">
+        <h4>Dow Jones (DJIA)</h4>
+      </div>
+      <p><strong>Industry:</strong> Market Index</p>
+      <p><strong>Rating:</strong> ★★★★☆</p>
+      <p><strong>What it is:</strong> The Dow Jones Industrial Average tracks 30 major U.S. companies and is often used as a measure of the overall market.</p>
+      <p><strong>Why I chose it:</strong> I chose the Dow Jones because it helps me understand how large companies perform together.</p>
+      <p><strong>Strength:</strong> It gives a broad view of major U.S. businesses.</p>
+      <p><strong>Risk:</strong> A risk is that it only tracks 30 companies, so it does not represent the entire market.</p>
+      <p><strong>My View:</strong> I think the Dow is important to follow because it helps show overall market trends.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="s&p.png" alt="S&P 500 Logo" class="logo">
+        <h4>S&amp;P 500 (SPY)</h4>
+      </div>
+      <p><strong>Industry:</strong> ETF / Market Index</p>
+      <p><strong>Rating:</strong> ★★★★★</p>
+      <p><strong>What it is:</strong> The S&amp;P 500 tracks 500 of the largest U.S. companies and gives a broad picture of the stock market.</p>
+      <p><strong>Why I chose it:</strong> I chose the S&amp;P 500 because it is one of the best ways to understand the overall U.S. market.</p>
+      <p><strong>Strength:</strong> It is diversified and represents many industries.</p>
+      <p><strong>Risk:</strong> A risk is that if the overall market falls, the S&amp;P 500 usually falls too.</p>
+      <p><strong>My View:</strong> I think the S&amp;P 500 is one of the strongest things to study because it reflects the market as a whole.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="boeing.png" alt="Boeing Logo" class="logo">
+        <h4>Boeing (BA)</h4>
+      </div>
+      <p><strong>Industry:</strong> Aerospace</p>
+      <p><strong>Rating:</strong> ★★★☆☆</p>
+      <p><strong>What the company does:</strong> Boeing is a major aerospace company that makes airplanes, defense products, and space technology.</p>
+      <p><strong>Why I chose it:</strong> I chose Boeing because it is one of the most important companies in the industrial and aerospace sectors.</p>
+      <p><strong>Strength:</strong> Boeing has a major role in aviation and defense, which gives it long-term importance.</p>
+      <p><strong>Risk:</strong> A risk is that Boeing can be affected by safety issues, production delays, and travel demand.</p>
+      <p><strong>My View:</strong> I think Boeing is an interesting stock because it shows how industrial companies can have both great opportunity and major risk.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="google.png" alt="Google Logo" class="logo">
+        <h4>Google (GOOGL)</h4>
+      </div>
+      <p><strong>Industry:</strong> Technology</p>
+      <p><strong>Rating:</strong> ★★★★★</p>
+      <p><strong>What the company does:</strong> Google is a technology company known for search, advertising, YouTube, cloud services, and artificial intelligence.</p>
+      <p><strong>Why I chose it:</strong> I chose Google because it plays a huge role in the digital world and continues to grow in different areas.</p>
+      <p><strong>Strength:</strong> Google has strong advertising revenue and major influence in technology.</p>
+      <p><strong>Risk:</strong> A risk is that it faces government regulation and strong competition in tech.</p>
+      <p><strong>My View:</strong> I think Google is one of the strongest companies to study because it affects so many parts of modern life.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="nvidia.png" alt="NVIDIA Logo" class="logo">
+        <h4>NVIDIA (NVDA)</h4>
+      </div>
+      <p><strong>Industry:</strong> Technology / AI</p>
+      <p><strong>Rating:</strong> ★★★★☆</p>
+      <p><strong>What the company does:</strong> NVIDIA designs computer chips that are important for gaming, artificial intelligence, and data centers.</p>
+      <p><strong>Why I chose it:</strong> I chose NVIDIA because it has become one of the most important companies in the growth of AI.</p>
+      <p><strong>Strength:</strong> NVIDIA is a leader in chips used for advanced technology and AI systems.</p>
+      <p><strong>Risk:</strong> A risk is that fast growth can also lead to high expectations and market volatility.</p>
+      <p><strong>My View:</strong> I think NVIDIA is a very interesting company because it is at the center of one of the fastest-growing areas in technology.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="jpmorgan.png" alt="JPMorgan Logo" class="logo">
+        <h4>JPMorgan Chase (JPM)</h4>
+      </div>
+      <p><strong>Industry:</strong> Financial</p>
+      <p><strong>Rating:</strong> ★★★★☆</p>
+      <p><strong>What the company does:</strong> JPMorgan Chase is one of the largest banks in the world and provides banking, investing, and financial services.</p>
+      <p><strong>Why I chose it:</strong> I chose JPMorgan because it is one of the strongest and most stable companies in finance.</p>
+      <p><strong>Strength:</strong> JPMorgan has a large global presence and strong financial position.</p>
+      <p><strong>Risk:</strong> A risk is that banks are affected by interest rates, economic conditions, and market performance.</p>
+      <p><strong>My View:</strong> I think JPMorgan is a strong company to analyze because it shows how large banks influence the economy.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="mcdonalds.png" alt="McDonald's Logo" class="logo">
+        <h4>McDonald's (MCD)</h4>
+      </div>
+      <p><strong>Industry:</strong> Consumer / Food</p>
+      <p><strong>Rating:</strong> ★★★★☆</p>
+      <p><strong>What the company does:</strong> McDonald’s is a global fast-food company with restaurants around the world.</p>
+      <p><strong>Why I chose it:</strong> I chose McDonald’s because it is one of the most recognizable and consistent global brands.</p>
+      <p><strong>Strength:</strong> McDonald’s has a strong business model and dependable customer demand.</p>
+      <p><strong>Risk:</strong> A risk is that changing food trends and costs can affect performance.</p>
+      <p><strong>My View:</strong> I think McDonald’s is a good company to study because it shows how strong branding and consistency can lead to long-term success.</p>
+    </div>
+
+  </div>
 
   <footer>
     <div class="container">
@@ -250,5 +264,4 @@
     </div>
   </footer>
 
-</body>
-</html>
+</section>
