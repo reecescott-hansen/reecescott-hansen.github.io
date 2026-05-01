@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Me — Reece Scott-Hansen</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .about-hero {
+      background: linear-gradient(135deg, #0f2557, #1d4ed8);
+      padding: 48px 20px;
+      text-align: center;
+    }
+
+    .about-hero h2 {
+      font-family: 'Merriweather', serif;
+      color: white;
+      font-size: clamp(22px, 4vw, 32px);
+      margin-bottom: 10px;
+    }
+
+    .about-hero p {
+      color: rgba(255,255,255,0.85);
+      font-size: 15px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .about-photo {
+      width: 100%;
+      border-radius: 14px;
+      border: 3px solid var(--light-blue);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+
+    .about-photo-placeholder {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+      border-radius: 14px;
+      border: 3px solid var(--light-blue);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue);
+      font-size: 13px;
+      text-align: center;
+      padding: 20px;
+      gap: 10px;
+    }
+
+    .about-photo-placeholder .photo-icon {
+      font-size: 40px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, #0f2557, #1d4ed8);
+      border-radius: 12px;
+      padding: 16px 12px;
+      text-align: center;
+    }
+
+    .stat-number {
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Merriweather', serif;
+    }
+
+    .stat-label {
+      color: rgba(255,255,255,0.75);
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .interest-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .interest-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 16px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .interest-icon { font-size: 30px; margin-bottom: 8px; }
+
+    .interest-card h4 {
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .interest-card p {
+      color: var(--gray);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .goal-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .goal-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    .goal-list li:last-child { border-bottom: none; }
+
+    .goal-list li .goal-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    @media (max-width: 600px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .stat-number { font-size: 18px; }
+      .stat-label { font-size: 10px; }
+      .about-hero { padding: 32px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <nav>
+        <h1>Reece Scott-Hansen's Finance Journal</h1>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="stocks.html">Stock Analysis</a></li>
+          <li><a href="port.html">Portfolio</a></li>
+          <li><a href="ai.html">AI &amp; Markets</a></li>
+          <li><a href="updates.html">Updates</a></li>
+          <li><a href="hire.html">Hire Me</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="market-bar">
+    <a href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" class="market-item">
+      <span class="market-name">S&amp;P 500</span>
+      <span class="market-price" id="mb-sp500-price">—</span>
+      <span class="up" id="mb-sp500-change">Loading...</span>
+    </a>
+    <a href="https://finance.yahoo.com/quote/%5EIXIC/" target="_blank" class="market-item">
+      <span class="market-name">Nasdaq</span>
+      <span class="market-price" id="mb-nasdaq-price">—</span>
+      <span class="up" id="mb-nasdaq-change">Loading...</span>
+    </a>
+    <a href="https://finance.yahoo.com/quote/%5EDJI/" target="_blank" class="market-item">
+      <span class="market-name">Dow Jones</span>
+      <span class="market-price" id="mb-dow-price">—</span>
+      <span class="up" id="mb-dow-change">Loading...</span>
+    </a>
+  </div>
+  <p class="market-label">Loading live data...</p>
+  <script src="market.js"></script>
+
+  <!-- Hero -->
+  <div class="about-hero">
+    <h2>Hi, I'm Reece Scott-Hansen</h2>
+    <p>10th grader from New York City — passionate about finance, investing, and building things from scratch.</p>
+  </div>
+
+  <section>
+    <div class="container">
+
+      <!-- Main about section -->
+      <div class="section-box">
+        <div class="about-grid">
+
+          <div>
+            <div class="about-photo-placeholder">
+              <div class="photo-icon">📷</div>
+              <div>Add your photo here — replace this with an &lt;img&gt; tag</div>
+            </div>
+            <div class="stat-grid">
+              <div class="stat-box">
+                <div class="stat-number">10th</div>
+                <div class="stat-label">Grade</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-number">14</div>
+                <div class="stat-label">Stocks Tracked</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-number">'28</div>
+                <div class="stat-label">Class Year</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 style="text-align:left; border-bottom: 2px solid var(--light-blue); padding-bottom: 12px; margin-bottom: 16px;">My Story</h3>
+
+            <p style="color:#374151; margin-bottom: 14px; line-height: 1.8; font-size: 15px;">
+              Growing up in New York City, I was always surrounded by the world of finance — and a lot of that came from watching my dad. He works in finance and has always been my biggest inspiration. Seeing how he understood the way businesses and markets work made me want to learn the same things. That curiosity turned into a genuine passion.
+            </p>
+
+            <p style="color:#374151; margin-bottom: 14px; line-height: 1.8; font-size: 15px;">
+              At the start of my freshman year at Columbia Grammar and Preparatory School, I decided to turn that passion into something real. I joined a Web Design class, learned HTML and CSS from scratch, and used those skills to build this website — a place where I could track stocks, manage a mock portfolio, and share what I am learning about investing as I go.
+            </p>
+
+            <p style="color:#374151; margin-bottom: 14px; line-height: 1.8; font-size: 15px;">
+              What started as a class project has grown into something I genuinely care about. I have built a 14-stock mock portfolio, added a live market tracker powered by real financial data, and launched a freelance web design service. Every part of this site was built by me — no templates, no shortcuts.
+            </p>
+
+            <p style="color:#374151; line-height: 1.8; font-size: 15px;">
+              I do not know exactly where finance will take me yet — whether that is investment banking, running my own fund, or building a business from the ground up. But I know that the best way to figure that out is to start now, stay curious, and keep building.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Interests -->
+      <div class="section-box">
+        <h3>What I'm Into</h3>
+        <div class="interest-grid">
+
+          <div class="interest-card">
+            <div class="interest-icon">📈</div>
+            <h4>Stock Picking</h4>
+            <p>I research and track 14 companies across tech, finance, consumer, and more. Finding undervalued companies is what excites me most.</p>
+          </div>
+
+          <div class="interest-card">
+            <div class="interest-icon">⛳</div>
+            <h4>Golf</h4>
+            <p>Golf is my main sport — I practice regularly and am always working to lower my handicap. The mental side of the game is what I love most.</p>
+          </div>
+
+          <div class="interest-card">
+            <div class="interest-icon">🏀</div>
+            <h4>Basketball</h4>
+            <p>I play basketball competitively and love the team dynamic. It has taught me a lot about performing under pressure.</p>
+          </div>
+
+          <div class="interest-card">
+            <div class="interest-icon">⚽</div>
+            <h4>Soccer</h4>
+            <p>Soccer has been part of my life since I was young. I love the strategy involved and playing with a close group of teammates.</p>
+          </div>
+
+          <div class="interest-card">
+            <div class="interest-icon">💻</div>
+            <h4>Web Design</h4>
+            <p>I taught myself HTML and CSS and built this entire site from scratch. I now offer freelance web design services to local businesses.</p>
+          </div>
+
+          <div class="interest-card">
+            <div class="interest-icon">🤖</div>
+            <h4>AI &amp; Markets</h4>
+            <p>I closely follow how artificial intelligence is reshaping finance and technology — especially companies like NVIDIA, Microsoft, and Google.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Goals -->
+      <div class="section-box">
+        <h3>My Goals</h3>
+        <ul class="goal-list">
+          <li>
+            <span class="goal-icon">🎓</span>
+            <span>Attend a top university to study finance, economics, or business — and use everything I am building now to stand out in the application process.</span>
+          </li>
+          <li>
+            <span class="goal-icon">📊</span>
+            <span>Continue growing my investing knowledge through real research, mock portfolio tracking, and monthly stock analysis write-ups on this site.</span>
+          </li>
+          <li>
+            <span class="goal-icon">💼</span>
+            <span>Land my first internship or work experience in finance during high school — whether at a firm, a startup, or through a competition.</span>
+          </li>
+          <li>
+            <span class="goal-icon">🖥️</span>
+            <span>Grow my freelance web design business by building websites for local NYC businesses and adding real client work to my portfolio.</span>
+          </li>
+          <li>
+            <span class="goal-icon">⛳</span>
+            <span>Keep improving my golf game and compete at a higher level junior year — golf has taught me discipline, patience, and how to stay focused under pressure.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CTA -->
+      <div class="section-box" style="text-align: center;">
+        <h3>Want to Work Together?</h3>
+        <p style="color: var(--gray); margin-bottom: 20px; font-size: 14px;">
+          Whether you need a website built or just want to connect, I'd love to hear from you.
+        </p>
+        <a href="hire.html" class="contact-link" style="margin-right: 10px;">View My Services</a>
+        <a href="port.html" class="contact-link">See My Portfolio</a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Reece Scott-Hansen '28 Finance Journal | Built with HTML and CSS</p>
+    </div>
+  </footer>
+
+</body>
+</html>
