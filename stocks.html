@@ -1,9 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stock Analysis</title>
+  <title>Stock Analysis — Reece Scott-Hansen</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    .card { cursor: pointer; }
+    .card-hint { font-size: 11px; color: var(--accent); margin-top: 10px; font-weight: 600; }
+
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6); z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 16px; backdrop-filter: blur(3px);
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: #0a0f1e; border-radius: 18px;
+      width: 100%; max-width: 780px; max-height: 90vh;
+      overflow-y: auto; box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+      animation: modalIn 0.22s ease;
+    }
+    @keyframes modalIn {
+      from { opacity:0; transform:scale(0.95) translateY(12px); }
+      to   { opacity:1; transform:scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #0f2557, #1d4ed8);
+      padding: 22px 24px 18px; border-radius: 18px 18px 0 0;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .modal-header-left { display: flex; align-items: center; gap: 14px; }
+    .modal-logo { width:44px; height:44px; border-radius:10px; object-fit:contain; background:white; padding:4px; border:2px solid rgba(255,255,255,0.25); }
+    .modal-title { color:white; font-size:20px; font-weight:700; }
+    .modal-subtitle { color:rgba(255,255,255,0.7); font-size:13px; margin-top:2px; }
+    .modal-close { background:rgba(255,255,255,0.15); border:none; color:white; font-size:20px; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.15s; }
+    .modal-close:hover { background:rgba(255,255,255,0.28); }
+
+    .modal-body { padding: 22px 24px; }
+
+    .modal-price-row { display:flex; align-items:baseline; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+    .modal-price { font-size:36px; font-weight:700; color:#e2e8f0; }
+    .modal-change { font-size:15px; font-weight:600; }
+
+    .modal-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px; }
+    .modal-stat { background:#111827; border:1px solid #1e293b; border-radius:10px; padding:12px 10px; text-align:center; }
+    .modal-stat-label { font-size:10px; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:5px; }
+    .modal-stat-value { font-size:15px; font-weight:700; color:#e2e8f0; }
+
+    .modal-chart-wrap { background:#111827; border:1px solid #1e293b; border-radius:12px; padding:16px; margin-bottom:20px; }
+    .modal-chart-title { font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:12px; }
+
+    .modal-analysis { background:white; border-radius:12px; padding:18px 20px; }
+    .modal-analysis h4 { color:#0f2557; font-size:15px; font-weight:700; margin-bottom:14px; padding-bottom:10px; border-bottom:2px solid #dbeafe; }
+    .analysis-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+    .analysis-item { background:#f8faff; border-radius:8px; padding:12px; }
+    .analysis-item-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:#6b7280; margin-bottom:5px; }
+    .analysis-item-text { font-size:13px; color:#374151; line-height:1.55; }
+    .analysis-view { background:#eff6ff; border-left:3px solid #2563eb; border-radius:0 8px 8px 0; padding:12px 14px; }
+    .analysis-view-label { font-size:10px; font-weight:700; text-transform:uppercase; color:#2563eb; letter-spacing:0.5px; margin-bottom:4px; }
+    .analysis-view-text { font-size:13px; color:#1e3a8a; line-height:1.55; }
+
+    @media (max-width:600px) {
+      .modal-stats { grid-template-columns:repeat(2,1fr); }
+      .analysis-row { grid-template-columns:1fr; }
+      .modal-price { font-size:26px; }
+      .modal-body { padding:14px; }
+      .modal-header { padding:14px; }
+      .modal-title { font-size:16px; }
+    }
+  </style>
 </head>
 <body>
 
@@ -16,250 +85,81 @@
           <li><a href="about.html">About</a></li>
           <li><a href="stocks.html">Stock Analysis</a></li>
           <li><a href="port.html">Portfolio</a></li>
-          <li><a href="ai.html">AI & Markets</a></li>
+          <li><a href="ai.html">AI &amp; Markets</a></li>
           <li><a href="updates.html">Updates</a></li>
-        <li><a href="hire.html">Hire Me</a></li>
+          <li><a href="hire.html">Hire Me</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
- <div class="market-bar">
-  <a href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" class="market-item">
-    <span class="market-name">S&amp;P 500</span>
-    <span class="market-price" id="mb-sp500-price">—</span>
-    <span class="up" id="mb-sp500-change">Loading...</span>
-  </a>
-  <a href="https://finance.yahoo.com/quote/%5EIXIC/" target="_blank" class="market-item">
-    <span class="market-name">Nasdaq</span>
-    <span class="market-price" id="mb-nasdaq-price">—</span>
-    <span class="up" id="mb-nasdaq-change">Loading...</span>
-  </a>
-  <a href="https://finance.yahoo.com/quote/%5EDJI/" target="_blank" class="market-item">
-    <span class="market-name">Dow Jones</span>
-    <span class="market-price" id="mb-dow-price">—</span>
-    <span class="up" id="mb-dow-change">Loading...</span>
-  </a>
-</div>
-<p class="market-label">Loading live data...</p>
-<script src="market.js"></script>
-
-  <section id="stocks">
-  <div class="container">
-    <h3>Stock Analysis</h3>
-
-
-    <div class="card">
-      <div class="card-header">
-        <img src="apple.png" alt="Apple Logo" class="logo">
-        <h4>Apple (AAPL)</h4>
-      </div>
-      <p><strong>Industry:</strong> Technology</p>
-      <p><strong>Rating:</strong> ★★★★☆</p>
-      <p><strong>What the company does:</strong> Apple is a technology company best known for the iPhone, MacBook, iPad, Apple Watch, and services like Apple Music and iCloud.</p>
-      <p><strong>Why I chose it:</strong> I chose Apple because it is one of the most well-known companies in the world and has a very loyal customer base.</p>
-      <p><strong>Strength:</strong> Apple has a powerful brand, strong product demand, and large cash flow.</p>
-      <p><strong>Risk:</strong> One risk is that Apple still depends heavily on iPhone sales.</p>
-      <p><strong>My View:</strong> I think Apple is a strong long-term company because it continues to grow while keeping a very strong reputation.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="amazon.png" alt="Amazon Logo" class="logo">
-        <h4>Amazon (AMZN)</h4>
-      </div>
-      <p><strong>Industry:</strong> Technology / Retail</p>
-      <p><strong>Rating:</strong> ★★★★☆</p>
-      <p><strong>What the company does:</strong> Amazon is a major online shopping company, but it also makes money from cloud computing, streaming, and delivery services.</p>
-      <p><strong>Why I chose it:</strong> I chose Amazon because it has changed the way people shop and has become one of the biggest businesses in the world.</p>
-      <p><strong>Strength:</strong> Amazon is strong because of its size, wide range of services, and leadership in online retail and cloud computing.</p>
-      <p><strong>Risk:</strong> A risk is that Amazon faces a lot of pressure from competition and changing consumer spending.</p>
-      <p><strong>My View:</strong> I think Amazon is a very important company to follow because it is involved in many parts of the economy.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="microsoft.png" alt="Microsoft Logo" class="logo">
-        <h4>Microsoft (MSFT)</h4>
-      </div>
-      <p><strong>Industry:</strong> Technology</p>
-      <p><strong>Rating:</strong> ★★★★★</p>
-      <p><strong>What the company does:</strong> Microsoft develops software, cloud services, and technology products such as Windows, Office, Xbox, and Azure.</p>
-      <p><strong>Why I chose it:</strong> I chose Microsoft because it is one of the biggest technology companies and plays a big role in both business and everyday life.</p>
-      <p><strong>Strength:</strong> Microsoft is strong because of its steady growth, cloud business, and importance in workplaces around the world.</p>
-      <p><strong>Risk:</strong> A risk is that technology companies face constant competition and changing trends.</p>
-      <p><strong>My View:</strong> I think Microsoft is a very strong long-term stock because it has many successful products and services.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="nike.png" alt="Nike Logo" class="logo">
-        <h4>Nike (NKE)</h4>
-      </div>
-      <p><strong>Industry:</strong> Consumer / Apparel</p>
-      <p><strong>Rating:</strong> ★★★★☆</p>
-      <p><strong>What the company does:</strong> Nike is a global sportswear company that sells shoes, clothing, and athletic equipment.</p>
-      <p><strong>Why I chose it:</strong> I chose Nike because it is a powerful brand that many people around the world recognize.</p>
-      <p><strong>Strength:</strong> Nike has strong brand recognition and a worldwide customer base.</p>
-      <p><strong>Risk:</strong> A risk is that sales can slow when consumers spend less money.</p>
-      <p><strong>My View:</strong> I think Nike is a good company to study because it connects business, marketing, and consumer behavior.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="morganstanley.png" alt="Morgan Stanley Logo" class="logo">
-        <h4>Morgan Stanley (MS)</h4>
-      </div>
-      <p><strong>Industry:</strong> Financial Services</p>
-      <p><strong>Rating:</strong> ★★★★☆</p>
-      <p><strong>What the company does:</strong> Morgan Stanley is a major financial company involved in investment banking, wealth management, and market services.</p>
-      <p><strong>Why I chose it:</strong> I chose Morgan Stanley because I want to learn more about finance and better understand how major financial firms operate.</p>
-      <p><strong>Strength:</strong> Morgan Stanley has a strong reputation and a major role in both investment banking and wealth management.</p>
-      <p><strong>Risk:</strong> A risk is that financial companies can be affected by market uncertainty and economic downturns.</p>
-      <p><strong>My View:</strong> I think Morgan Stanley is a strong finance stock to study because it shows how banks and markets connect.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="coca-cola.png" alt="Coca-Cola Logo" class="logo">
-        <h4>Coca-Cola (KO)</h4>
-      </div>
-      <p><strong>Industry:</strong> Beverage</p>
-      <p><strong>Rating:</strong> ★★★★☆</p>
-      <p><strong>What the company does:</strong> Coca-Cola is a global beverage company that sells soft drinks, water, juices, and sports drinks.</p>
-      <p><strong>Why I chose it:</strong> I chose Coca-Cola because it is one of the most recognizable brands in the world.</p>
-      <p><strong>Strength:</strong> Coca-Cola has a very strong global brand and consistent demand.</p>
-      <p><strong>Risk:</strong> A risk is that changing health trends may affect demand for some of its products.</p>
-      <p><strong>My View:</strong> I think Coca-Cola is a reliable company to study because it shows how strong branding can lead to long-term success.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="tesla.png" alt="Tesla Logo" class="logo">
-        <h4>Tesla (TSLA)</h4>
-      </div>
-      <p><strong>Industry:</strong> Automotive / Energy</p>
-      <p><strong>Rating:</strong> ★★★☆☆</p>
-      <p><strong>What the company does:</strong> Tesla makes electric vehicles, batteries, and energy products.</p>
-      <p><strong>Why I chose it:</strong> I chose Tesla because it is one of the most talked-about companies in the market and has changed the car industry.</p>
-      <p><strong>Strength:</strong> Tesla is known for innovation and strong influence in electric vehicles.</p>
-      <p><strong>Risk:</strong> A risk is that Tesla can be very volatile and faces strong competition.</p>
-      <p><strong>My View:</strong> I think Tesla is an interesting stock because it has high growth potential but also more risk than some other companies.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="disney.png" alt="Disney Logo" class="logo">
-        <h4>Disney (DIS)</h4>
-      </div>
-      <p><strong>Industry:</strong> Entertainment</p>
-      <p><strong>Rating:</strong> ★★★★☆</p>
-      <p><strong>What the company does:</strong> Disney is a global entertainment company involved in movies, streaming, theme parks, and media.</p>
-      <p><strong>Why I chose it:</strong> I chose Disney because it is one of the strongest entertainment brands in the world.</p>
-      <p><strong>Strength:</strong> Disney has many business segments and a very powerful brand name.</p>
-      <p><strong>Risk:</strong> A risk is that entertainment demand and streaming competition can affect performance.</p>
-      <p><strong>My View:</strong> I think Disney is a strong company to analyze because it combines media, business, and global consumer appeal.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="dowjones.png" alt="Dow Jones Logo" class="logo">
-        <h4>Dow Jones (DJIA)</h4>
-      </div>
-      <p><strong>Industry:</strong> Market Index</p>
-      <p><strong>Rating:</strong> ★★★★☆</p>
-      <p><strong>What it is:</strong> The Dow Jones Industrial Average tracks 30 major U.S. companies and is often used as a measure of the overall market.</p>
-      <p><strong>Why I chose it:</strong> I chose the Dow Jones because it helps me understand how large companies perform together.</p>
-      <p><strong>Strength:</strong> It gives a broad view of major U.S. businesses.</p>
-      <p><strong>Risk:</strong> A risk is that it only tracks 30 companies, so it does not represent the entire market.</p>
-      <p><strong>My View:</strong> I think the Dow is important to follow because it helps show overall market trends.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="s&p.png" alt="S&P 500 Logo" class="logo">
-        <h4>S&amp;P 500 (SPY)</h4>
-      </div>
-      <p><strong>Industry:</strong> ETF / Market Index</p>
-      <p><strong>Rating:</strong> ★★★★★</p>
-      <p><strong>What it is:</strong> The S&amp;P 500 tracks 500 of the largest U.S. companies and gives a broad picture of the stock market.</p>
-      <p><strong>Why I chose it:</strong> I chose the S&amp;P 500 because it is one of the best ways to understand the overall U.S. market.</p>
-      <p><strong>Strength:</strong> It is diversified and represents many industries.</p>
-      <p><strong>Risk:</strong> A risk is that if the overall market falls, the S&amp;P 500 usually falls too.</p>
-      <p><strong>My View:</strong> I think the S&amp;P 500 is one of the strongest things to study because it reflects the market as a whole.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="boeing.png" alt="Boeing Logo" class="logo">
-        <h4>Boeing (BA)</h4>
-      </div>
-      <p><strong>Industry:</strong> Aerospace</p>
-      <p><strong>Rating:</strong> ★★★☆☆</p>
-      <p><strong>What the company does:</strong> Boeing is a major aerospace company that makes airplanes, defense products, and space technology.</p>
-      <p><strong>Why I chose it:</strong> I chose Boeing because it is one of the most important companies in the industrial and aerospace sectors.</p>
-      <p><strong>Strength:</strong> Boeing has a major role in aviation and defense, which gives it long-term importance.</p>
-      <p><strong>Risk:</strong> A risk is that Boeing can be affected by safety issues, production delays, and travel demand.</p>
-      <p><strong>My View:</strong> I think Boeing is an interesting stock because it shows how industrial companies can have both great opportunity and major risk.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="google.png" alt="Google Logo" class="logo">
-        <h4>Google (GOOGL)</h4>
-      </div>
-      <p><strong>Industry:</strong> Technology</p>
-      <p><strong>Rating:</strong> ★★★★★</p>
-      <p><strong>What the company does:</strong> Google is a technology company known for search, advertising, YouTube, cloud services, and artificial intelligence.</p>
-      <p><strong>Why I chose it:</strong> I chose Google because it plays a huge role in the digital world and continues to grow in different areas.</p>
-      <p><strong>Strength:</strong> Google has strong advertising revenue and major influence in technology.</p>
-      <p><strong>Risk:</strong> A risk is that it faces government regulation and strong competition in tech.</p>
-      <p><strong>My View:</strong> I think Google is one of the strongest companies to study because it affects so many parts of modern life.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="nvidia.png" alt="NVIDIA Logo" class="logo">
-        <h4>NVIDIA (NVDA)</h4>
-      </div>
-      <p><strong>Industry:</strong> Technology / AI</p>
-      <p><strong>Rating:</strong> ★★★★☆</p>
-      <p><strong>What the company does:</strong> NVIDIA designs computer chips that are important for gaming, artificial intelligence, and data centers.</p>
-      <p><strong>Why I chose it:</strong> I chose NVIDIA because it has become one of the most important companies in the growth of AI.</p>
-      <p><strong>Strength:</strong> NVIDIA is a leader in chips used for advanced technology and AI systems.</p>
-      <p><strong>Risk:</strong> A risk is that fast growth can also lead to high expectations and market volatility.</p>
-      <p><strong>My View:</strong> I think NVIDIA is a very interesting company because it is at the center of one of the fastest-growing areas in technology.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="jpmorgan.png" alt="JPMorgan Logo" class="logo">
-        <h4>JPMorgan Chase (JPM)</h4>
-      </div>
-      <p><strong>Industry:</strong> Financial</p>
-      <p><strong>Rating:</strong> ★★★★☆</p>
-      <p><strong>What the company does:</strong> JPMorgan Chase is one of the largest banks in the world and provides banking, investing, and financial services.</p>
-      <p><strong>Why I chose it:</strong> I chose JPMorgan because it is one of the strongest and most stable companies in finance.</p>
-      <p><strong>Strength:</strong> JPMorgan has a large global presence and strong financial position.</p>
-      <p><strong>Risk:</strong> A risk is that banks are affected by interest rates, economic conditions, and market performance.</p>
-      <p><strong>My View:</strong> I think JPMorgan is a strong company to analyze because it shows how large banks influence the economy.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <img src="mcdonalds.png" alt="McDonald's Logo" class="logo">
-        <h4>McDonald's (MCD)</h4>
-      </div>
-      <p><strong>Industry:</strong> Consumer / Food</p>
-      <p><strong>Rating:</strong> ★★★★☆</p>
-      <p><strong>What the company does:</strong> McDonald’s is a global fast-food company with restaurants around the world.</p>
-      <p><strong>Why I chose it:</strong> I chose McDonald’s because it is one of the most recognizable and consistent global brands.</p>
-      <p><strong>Strength:</strong> McDonald’s has a strong business model and dependable customer demand.</p>
-      <p><strong>Risk:</strong> A risk is that changing food trends and costs can affect performance.</p>
-      <p><strong>My View:</strong> I think McDonald’s is a good company to study because it shows how strong branding and consistency can lead to long-term success.</p>
-    </div>
-
+  <div class="market-bar">
+    <a href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" class="market-item">
+      <span class="market-name">S&amp;P 500</span>
+      <span class="market-price" id="mb-sp500-price">—</span>
+      <span class="up" id="mb-sp500-change">Loading...</span>
+    </a>
+    <a href="https://finance.yahoo.com/quote/%5EIXIC/" target="_blank" class="market-item">
+      <span class="market-name">Nasdaq</span>
+      <span class="market-price" id="mb-nasdaq-price">—</span>
+      <span class="up" id="mb-nasdaq-change">Loading...</span>
+    </a>
+    <a href="https://finance.yahoo.com/quote/%5EDJI/" target="_blank" class="market-item">
+      <span class="market-name">Dow Jones</span>
+      <span class="market-price" id="mb-dow-price">—</span>
+      <span class="up" id="mb-dow-change">Loading...</span>
+    </a>
   </div>
+  <p class="market-label">Loading live data...</p>
+  <script src="market.js"></script>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <img id="m-logo" src="" alt="" class="modal-logo" onerror="this.style.display='none'">
+          <div>
+            <div class="modal-title" id="m-title"></div>
+            <div class="modal-subtitle" id="m-subtitle"></div>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModalBtn()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-price-row">
+          <span class="modal-price" id="m-price"><span style="color:#64748b;font-size:16px">Loading live price...</span></span>
+          <span class="modal-change" id="m-change"></span>
+        </div>
+        <div class="modal-stats" id="m-stats"></div>
+        <div class="modal-chart-wrap">
+          <div class="modal-chart-title">Price trend — last 6 months (simulated)</div>
+          <div style="position:relative;height:160px"><canvas id="m-chart"></canvas></div>
+        </div>
+        <div class="modal-analysis">
+          <h4>My Analysis</h4>
+          <div class="analysis-row">
+            <div class="analysis-item"><div class="analysis-item-label">💼 What they do</div><div class="analysis-item-text" id="m-does"></div></div>
+            <div class="analysis-item"><div class="analysis-item-label">✅ Strength</div><div class="analysis-item-text" id="m-strength"></div></div>
+            <div class="analysis-item"><div class="analysis-item-label">⚠️ Risk</div><div class="analysis-item-text" id="m-risk"></div></div>
+            <div class="analysis-item"><div class="analysis-item-label">🎯 Why I chose it</div><div class="analysis-item-text" id="m-why"></div></div>
+          </div>
+          <div class="analysis-view">
+            <div class="analysis-view-label">📝 My View</div>
+            <div class="analysis-view-text" id="m-view"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STOCK CARDS -->
+  <section id="stocks">
+    <div class="container">
+      <h3>Stock Analysis <span style="font-size:13px;font-weight:400;color:var(--gray);margin-left:6px">— tap any card for live data &amp; analysis</span></h3>
+      <div class="card-grid" id="stock-grid"></div>
+    </div>
+  </section>
 
   <footer>
     <div class="container">
@@ -267,4 +167,196 @@
     </div>
   </footer>
 
-</section>
+  <script>
+    const API_KEY = 'd7paulpr01qlb0a9cjhgd7paulpr01qlb0a9cji0';
+
+    const stocks = [
+      { ticker:'AAPL',  name:'Apple',         subtitle:'Technology',          logo:'apple.png',         rating:'★★★★☆', buyPrice:180, shares:10,
+        does:'Apple makes the iPhone, MacBook, iPad, and services like iCloud and Apple Music.',
+        strength:'Powerful brand, massive cash flow, and one of the most loyal customer bases in the world.',
+        risk:'Still heavily dependent on iPhone sales — a slowdown could hurt revenue significantly.',
+        why:'One of the most recognized companies on earth with decades of consistent growth.',
+        view:'A strong long-term hold. Apple keeps finding ways to grow even as its products mature.' },
+      { ticker:'AMZN',  name:'Amazon',        subtitle:'Technology / Retail',  logo:'amazon.png',        rating:'★★★★☆', buyPrice:175, shares:8,
+        does:'Amazon dominates online retail and runs AWS, the world\'s largest cloud computing platform.',
+        strength:'Unmatched scale in both e-commerce and cloud — two industries that keep growing.',
+        risk:'Faces pressure from competition and changing consumer spending habits.',
+        why:'Amazon touches nearly every part of the economy — retail, cloud, streaming, and logistics.',
+        view:'One of the most important companies to follow. AWS alone makes it a strong long-term bet.' },
+      { ticker:'MSFT',  name:'Microsoft',     subtitle:'Technology',           logo:'microsoft.png',     rating:'★★★★★', buyPrice:420, shares:6,
+        does:'Microsoft builds Windows, Office, Azure cloud, Xbox, and has invested heavily in AI through OpenAI.',
+        strength:'Steady growth, dominant cloud business, and major AI investments paying off.',
+        risk:'Technology companies face constant competition and rapidly shifting trends.',
+        why:'One of the biggest tech companies in the world — essential in both business and everyday life.',
+        view:'My highest-conviction tech pick. Microsoft is building the future of AI-powered software.' },
+      { ticker:'NKE',   name:'Nike',          subtitle:'Consumer / Apparel',   logo:'nike.png',          rating:'★★★★☆', buyPrice:95, shares:12,
+        does:'Nike sells shoes, clothing, and athletic gear in nearly every country in the world.',
+        strength:'Global brand recognition and a loyal customer base that spans all ages and demographics.',
+        risk:'Sales slow when consumers cut spending — Nike is sensitive to economic downturns.',
+        why:'A brand nearly everyone on earth recognizes. Strong marketing gives it lasting power.',
+        view:'Solid long-term consumer stock. Nike\'s brand is one of the most durable assets in business.' },
+      { ticker:'MS',    name:'Morgan Stanley',subtitle:'Financial Services',   logo:'morganstanley.png', rating:'★★★★☆', buyPrice:85, shares:8,
+        does:'Morgan Stanley is a top investment bank involved in wealth management, trading, and M&A deals.',
+        strength:'Elite reputation on Wall Street and a growing wealth management division.',
+        risk:'Financial firms are vulnerable to market downturns, rate changes, and economic recessions.',
+        why:'I want to work in finance — studying how major firms like Morgan Stanley operate is essential.',
+        view:'A great stock for anyone interested in finance. Shows how investment banking connects to markets.' },
+      { ticker:'KO',    name:'Coca-Cola',     subtitle:'Beverage',             logo:'coca-cola.png',     rating:'★★★★☆', buyPrice:60, shares:15,
+        does:'Coca-Cola sells beverages in over 200 countries — from Coke to Dasani to Minute Maid.',
+        strength:'One of the strongest global brands ever built with incredibly consistent demand.',
+        risk:'Changing health trends and competition from healthier drinks could hurt long-term growth.',
+        why:'A classic dividend stock and one of Warren Buffett\'s favorite holdings.',
+        view:'Reliable and predictable — perfect for understanding what a stable consumer brand looks like.' },
+      { ticker:'TSLA',  name:'Tesla',         subtitle:'Automotive / Energy',  logo:'tesla.png',         rating:'★★★☆☆', buyPrice:250, shares:5,
+        does:'Tesla makes electric vehicles, solar panels, and battery storage products.',
+        strength:'First mover in EVs with a passionate brand and ongoing innovation in energy tech.',
+        risk:'Very volatile stock — faces growing competition from legacy automakers and new EV brands.',
+        why:'One of the most talked-about companies in the market — changed the entire auto industry.',
+        view:'My riskiest pick. High upside but also high uncertainty. Worth tracking closely.' },
+      { ticker:'DIS',   name:'Disney',        subtitle:'Entertainment',        logo:'disney.png',        rating:'★★★★☆', buyPrice:110, shares:7,
+        does:'Disney runs movies, theme parks, Disney+, ESPN, and some of the most iconic brands ever.',
+        strength:'Unmatched content library and brand power spanning movies, TV, parks, and merchandise.',
+        risk:'Streaming competition is intense and cord-cutting continues to pressure traditional media.',
+        why:'One of the most powerful entertainment companies ever built.',
+        view:'Interesting long-term turnaround story. A lot depends on whether Disney+ becomes profitable.' },
+      { ticker:'SPY',   name:'S&P 500 ETF',   subtitle:'ETF / Index',          logo:'s&p.png',           rating:'★★★★★', buyPrice:500, shares:5,
+        does:'SPY tracks the 500 largest U.S. companies — buying it means owning a piece of all of them.',
+        strength:'Maximum diversification across every major industry in one simple investment.',
+        risk:'When the whole market falls, SPY falls too — no protection from broad downturns.',
+        why:'The best way to understand the overall U.S. market at a glance.',
+        view:'Every portfolio should have some index exposure. SPY is my safety net holding.' },
+      { ticker:'BA',    name:'Boeing',        subtitle:'Aerospace / Defense',  logo:'boeing.png',        rating:'★★★☆☆', buyPrice:210, shares:6,
+        does:'Boeing builds commercial airplanes, military aircraft, and space systems.',
+        strength:'Critical role in global aviation and defense with major long-term government contracts.',
+        risk:'Has faced serious safety scandals, production delays, and lawsuits in recent years.',
+        why:'One of the most important industrial companies in the world — a key aerospace case study.',
+        view:'A turnaround story with real risk. Shows how even massive companies can lose investor trust.' },
+      { ticker:'GOOGL', name:'Google',        subtitle:'Technology',           logo:'google.png',        rating:'★★★★★', buyPrice:140, shares:6,
+        does:'Google runs the world\'s most used search engine, YouTube, Google Cloud, and Gemini AI.',
+        strength:'Dominates digital advertising and is growing fast in cloud and artificial intelligence.',
+        risk:'Faces government antitrust regulation and serious competition in AI from OpenAI and Microsoft.',
+        why:'Google affects nearly every part of modern digital life.',
+        view:'One of my strongest picks. The ad business funds everything else while AI grows underneath.' },
+      { ticker:'NVDA',  name:'NVIDIA',        subtitle:'Technology / AI',      logo:'nvidia.png',        rating:'★★★★☆', buyPrice:900, shares:4,
+        does:'NVIDIA makes GPUs — the chips that power AI systems, gaming, and data centers worldwide.',
+        strength:'Their chips run virtually every major AI model — nearly impossible to replace right now.',
+        risk:'High expectations priced in — any slowdown in AI growth could cause a sharp pullback.',
+        why:'NVIDIA is at the center of the AI revolution. The most important chip company in the world.',
+        view:'Exciting long-term hold but volatile. Watch AI spending closely — that drives everything.' },
+      { ticker:'JPM',   name:'JPMorgan Chase',subtitle:'Financial',            logo:'jpmorgan.png',      rating:'★★★★☆', buyPrice:190, shares:5,
+        does:'JPMorgan is the largest U.S. bank — covering consumer banking, investment banking, and asset management.',
+        strength:'Massive global reach and one of the most diversified revenue streams of any bank.',
+        risk:'Banks are sensitive to interest rate changes, recessions, and market instability.',
+        why:'The gold standard of American banking — essential for understanding how finance works.',
+        view:'Rock solid. Jamie Dimon runs one of the best-managed companies in the world.' },
+      { ticker:'MCD',   name:"McDonald's",    subtitle:'Consumer / Food',      logo:'mcdonalds.png',     rating:'★★★★☆', buyPrice:280, shares:7,
+        does:"McDonald's operates over 40,000 restaurants in 100+ countries through a franchise model.",
+        strength:'The franchise model generates steady royalty revenue regardless of individual store performance.',
+        risk:'Changing food preferences and rising ingredient costs can pressure margins.',
+        why:'A masterclass in global brand consistency and business model efficiency.',
+        view:'One of the best long-term consumer stocks. The franchise model is nearly recession-proof.' },
+    ];
+
+    let activeChart = null;
+
+    // Build cards
+    const grid = document.getElementById('stock-grid');
+    stocks.forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-header">
+          <img src="${s.logo}" alt="${s.name}" class="logo" onerror="this.style.display='none'">
+          <h4>${s.name} (${s.ticker})</h4>
+        </div>
+        <p><strong>Industry:</strong> ${s.subtitle}</p>
+        <p><strong>Rating:</strong> ${s.rating}</p>
+        <p><strong>Buy Price:</strong> $${s.buyPrice} &nbsp;|&nbsp; <strong>Shares:</strong> ${s.shares}</p>
+        <p style="margin-top:6px;color:#64748b;font-size:13px;line-height:1.5">${s.does.substring(0,85)}...</p>
+        <p class="card-hint">Tap for live price &amp; full analysis →</p>
+      `;
+      card.addEventListener('click', () => openModal(s));
+      grid.appendChild(card);
+    });
+
+    async function openModal(s) {
+      document.getElementById('m-logo').src = s.logo;
+      document.getElementById('m-title').textContent = `${s.name} (${s.ticker})`;
+      document.getElementById('m-subtitle').textContent = s.subtitle;
+      document.getElementById('m-price').innerHTML = '<span style="color:#64748b;font-size:16px">Fetching live price...</span>';
+      document.getElementById('m-change').textContent = '';
+      document.getElementById('m-does').textContent = s.does;
+      document.getElementById('m-strength').textContent = s.strength;
+      document.getElementById('m-risk').textContent = s.risk;
+      document.getElementById('m-why').textContent = s.why;
+      document.getElementById('m-view').textContent = s.view;
+
+      document.getElementById('m-stats').innerHTML = `
+        <div class="modal-stat"><div class="modal-stat-label">Buy Price</div><div class="modal-stat-value">$${s.buyPrice}</div></div>
+        <div class="modal-stat"><div class="modal-stat-label">Shares</div><div class="modal-stat-value">${s.shares}</div></div>
+        <div class="modal-stat"><div class="modal-stat-label">Cost Basis</div><div class="modal-stat-value">$${(s.buyPrice*s.shares).toLocaleString()}</div></div>
+        <div class="modal-stat"><div class="modal-stat-label">Rating</div><div class="modal-stat-value">${s.rating}</div></div>
+      `;
+
+      document.getElementById('modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      drawChart(s);
+
+      try {
+        const res  = await fetch(`https://finnhub.io/api/v1/quote?symbol=${s.ticker}&token=${API_KEY}`);
+        const data = await res.json();
+        if (data.c && data.c > 0) {
+          const price = data.c, change = data.d, pct = data.dp, up = change >= 0;
+          const value = (price * s.shares).toLocaleString('en-US',{maximumFractionDigits:0});
+          const gl    = ((price - s.buyPrice) * s.shares).toFixed(0);
+          const glPct = ((price - s.buyPrice) / s.buyPrice * 100).toFixed(2);
+          const glUp  = gl >= 0;
+
+          document.getElementById('m-price').textContent = '$' + price.toFixed(2);
+          document.getElementById('m-change').innerHTML =
+            `<span style="color:${up?'#4ade80':'#f87171'}">${up?'▲':'▼'} $${Math.abs(change).toFixed(2)} (${Math.abs(pct).toFixed(2)}%) today</span>`;
+          document.getElementById('m-stats').innerHTML = `
+            <div class="modal-stat"><div class="modal-stat-label">Live Price</div><div class="modal-stat-value" style="color:${up?'#4ade80':'#f87171'}">$${price.toFixed(2)}</div></div>
+            <div class="modal-stat"><div class="modal-stat-label">Your Value</div><div class="modal-stat-value">$${value}</div></div>
+            <div class="modal-stat"><div class="modal-stat-label">Gain / Loss</div><div class="modal-stat-value" style="color:${glUp?'#4ade80':'#f87171'}">${glUp?'+':'-'}$${Math.abs(gl)}</div></div>
+            <div class="modal-stat"><div class="modal-stat-label">Return</div><div class="modal-stat-value" style="color:${glUp?'#4ade80':'#f87171'}">${glUp?'+':''}${glPct}%</div></div>
+          `;
+        }
+      } catch(e) {
+        document.getElementById('m-price').textContent = 'Price unavailable';
+      }
+    }
+
+    function drawChart(s) {
+      if (activeChart) { activeChart.destroy(); activeChart = null; }
+      const months = ['Nov','Dec','Jan','Feb','Mar','Apr'];
+      const seed   = s.buyPrice;
+      const prices = months.map((_,i) => {
+        const noise = (Math.sin(i*2.3+seed)*0.08 + Math.cos(i*1.7+seed)*0.05) * seed;
+        return Math.max(seed*0.75, parseFloat((seed + noise + (i-2)*seed*0.015).toFixed(2)));
+      });
+      const up = prices[prices.length-1] >= prices[0];
+      const ctx = document.getElementById('m-chart').getContext('2d');
+      activeChart = new Chart(ctx, {
+        type:'line',
+        data:{ labels:months, datasets:[{ data:prices, borderColor:up?'#4ade80':'#f87171', backgroundColor:up?'rgba(74,222,128,0.08)':'rgba(248,113,113,0.08)', fill:true, tension:0.4, pointRadius:4, pointBackgroundColor:up?'#4ade80':'#f87171', pointBorderColor:'#0a0f1e', pointBorderWidth:2, borderWidth:2 }] },
+        options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+          scales:{
+            y:{ ticks:{callback:v=>'$'+v.toFixed(0),color:'#64748b',font:{size:10}}, grid:{color:'rgba(255,255,255,0.04)'}, border:{color:'rgba(255,255,255,0.06)'} },
+            x:{ ticks:{color:'#64748b',font:{size:10}}, grid:{display:false}, border:{color:'rgba(255,255,255,0.06)'} }
+          }
+        }
+      });
+    }
+
+    function closeModal(e) { if (e.target === document.getElementById('modal-overlay')) closeModalBtn(); }
+    function closeModalBtn() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+      if (activeChart) { activeChart.destroy(); activeChart = null; }
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+  </script>
+
+</body>
+</html>
