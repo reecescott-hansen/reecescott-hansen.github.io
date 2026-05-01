@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hire Me — Reece Scott-Hansen</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -22,14 +23,34 @@
     </div>
   </header>
 
-  <!-- Hero Banner -->
+  <div class="market-bar">
+    <a href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" class="market-item">
+      <span class="market-name">S&amp;P 500</span>
+      <span class="market-price" id="mb-sp500-price">—</span>
+      <span class="up" id="mb-sp500-change">Loading...</span>
+    </a>
+    <a href="https://finance.yahoo.com/quote/%5EIXIC/" target="_blank" class="market-item">
+      <span class="market-name">Nasdaq</span>
+      <span class="market-price" id="mb-nasdaq-price">—</span>
+      <span class="up" id="mb-nasdaq-change">Loading...</span>
+    </a>
+    <a href="https://finance.yahoo.com/quote/%5EDJI/" target="_blank" class="market-item">
+      <span class="market-name">Dow Jones</span>
+      <span class="market-price" id="mb-dow-price">—</span>
+      <span class="up" id="mb-dow-change">Loading...</span>
+    </a>
+  </div>
+  <p class="market-label">Loading live data...</p>
+  <script src="market.js"></script>
+
+  <!-- Hero -->
   <div class="hire-hero">
     <h2>Need a Website? I Can Build It.</h2>
     <p>
-      I'm a 10th grade web design student from New York City offering clean, affordable websites
+      I'm a 10th grade web design student from NYC offering affordable, clean websites
       for small businesses, local shops, and personal projects.
     </p>
-    <a href="mailto:rscotthansen28@cgps.org" class="btn">📧 Get in Touch</a>
+    <a href="mailto:youremail@email.com" class="btn">📧 Get in Touch</a>
   </div>
 
   <section>
@@ -107,8 +128,8 @@
           <div class="card">
             <h4>📊 Finance Journal Website</h4>
             <p><strong>Type:</strong> Personal Portfolio</p>
-            <p><strong>Built with:</strong> HTML, CSS</p>
-            <p>A six-page finance website featuring stock analysis, a mock investment portfolio, AI market insights, and project updates. This is the site you are currently viewing.</p>
+            <p><strong>Built with:</strong> HTML, CSS, JavaScript</p>
+            <p>A six-page finance website featuring live stock prices, a real-time portfolio tracker, AI market insights, and project updates. This is the site you are currently viewing.</p>
           </div>
 
           <div class="card" style="border: 2px dashed #d1d5db; background: #f9fafb;">
@@ -124,7 +145,7 @@
         <h3>Get in Touch</h3>
         <div class="contact-box">
           <p>Interested in working together? Send me a message and I will get back to you within 24 hours.</p>
-          <a href="mailto:rscotthansen28@cgps.org" class="contact-link">📧 Email Me</a>
+          <a href="mailto:youremail@email.com" class="contact-link">📧 Email Me</a>
         </div>
       </div>
 
