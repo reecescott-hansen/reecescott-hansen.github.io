@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investment Tools — Reece Scott-Hansen</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .tab-bar {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      font-size: 13px;
+      padding: 9px 18px;
+      border: none;
+      background: none;
+      color: var(--gray);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: 'Inter', Arial, sans-serif;
+      font-weight: 500;
+      margin-bottom: -1px;
+      transition: color 0.15s;
+    }
+
+    .tab-btn.on {
+      color: var(--navy);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-btn:hover:not(.on) { color: var(--text); }
+
+    .panel { display: none; }
+    .panel.on { display: block; }
+
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .filter-row label {
+      font-size: 13px;
+      color: var(--gray);
+    }
+
+    .filter-row select {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      background: white;
+      color: var(--text);
+      font-family: 'Inter', Arial, sans-serif;
+    }
+
+    .stock-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .stock-table th {
+      color: var(--gray);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+      padding: 0 10px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stock-table td {
+      padding: 11px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+      color: var(--text);
+    }
+
+    .stock-table tr:last-child td { border-bottom: none; }
+    .stock-table tr:hover td { background: #f8faff; }
+
+    .s-badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .b-tech { background: #dbeafe; color: #1e3a8a; }
+    .b-fin  { background: #d1fae5; color: #065f46; }
+    .b-con  { background: #fef3c7; color: #78350f; }
+    .b-ae   { background: #ffe4e6; color: #9f1239; }
+    .b-ent  { background: #ede9fe; color: #4c1d95; }
+    .b-etf  { background: #f1f5f9; color: #475569; }
+
+    .stars { color: #f59e0b; font-size: 13px; letter-spacing: 1px; }
+
+    /* P&L Calculator */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .calc-field label {
+      display: block;
+      font-size: 12px;
+      color: var(--gray);
+      font-weight: 500;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .calc-field input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', Arial, sans-serif;
+      color: var(--text);
+      background: white;
+    }
+
+    .calc-field input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .result-card {
+      background: #f8faff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .result-card .r-label {
+      font-size: 11px;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .result-card .r-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .g { color: #16a34a; }
+    .r { color: #dc2626; }
+
+    /* Portfolio Builder */
+    .pb-item {
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr 80px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+    }
+
+    .pb-item:last-child { border-bottom: none; }
+
+    .pb-item .t-name {
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .pb-item input {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-size: 13px;
+      font-family: 'Inter', Arial, sans-serif;
+      width: 100%;
+    }
+
+    .pb-item input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .pb-item .pb-val {
+      text-align: right;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .pb-total-bar {
+      background: linear-gradient(135deg, #0f2557, #1d4ed8);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .pb-total-bar span { color: rgba(255,255,255,0.8); font-size: 14px; }
+    .pb-total-bar strong { color: white; font-size: 22px; }
+
+    /* News */
+    .news-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .news-item:last-child { border-bottom: none; }
+
+    .news-headline {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 5px;
+      line-height: 1.4;
+    }
+
+    .news-headline a {
+      color: var(--navy);
+      text-decoration: none;
+    }
+
+    .news-headline a:hover { color: var(--accent); }
+
+    .news-meta {
+      font-size: 12px;
+      color: var(--gray);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .news-ticker-tag {
+      background: var(--light-blue);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .quick-fill-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .qf-btn {
+      background: var(--light-blue);
+      color: var(--blue);
+      border: none;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: 'Inter', Arial, sans-serif;
+    }
+
+    .qf-btn:hover { background: #bfdbfe; }
+
+    .tools-hero {
+      background: linear-gradient(135deg, #0f2557, #1d4ed8);
+      padding: 36px 20px;
+      text-align: center;
+    }
+
+    .tools-hero h2 {
+      font-family: 'Merriweather', serif;
+      color: white;
+      font-size: clamp(18px, 3vw, 26px);
+      margin-bottom: 8px;
+    }
+
+    .tools-hero p {
+      color: rgba(255,255,255,0.85);
+      font-size: 14px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .count-bar {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .pb-item { grid-template-columns: 60px 1fr 1fr 70px; gap: 6px; }
+      .calc-grid { grid-template-columns: 1fr 1fr; }
+      .result-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <nav>
+        <h1>Reece Scott-Hansen's Finance Journal</h1>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="stocks.html">Stock Analysis</a></li>
+          <li><a href="port.html">Portfolio</a></li>
+          <li><a href="tools.html">Tools</a></li>
+          <li><a href="ai.html">AI &amp; Markets</a></li>
+          <li><a href="updates.html">Updates</a></li>
+          <li><a href="hire.html">Hire Me</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="market-bar">
+    <a href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" class="market-item">
+      <span class="market-name">S&amp;P 500</span>
+      <span class="market-price" id="mb-sp500-price">—</span>
+      <span class="up" id="mb-sp500-change">Loading...</span>
+    </a>
+    <a href="https://finance.yahoo.com/quote/%5EIXIC/" target="_blank" class="market-item">
+      <span class="market-name">Nasdaq</span>
+      <span class="market-price" id="mb-nasdaq-price">—</span>
+      <span class="up" id="mb-nasdaq-change">Loading...</span>
+    </a>
+    <a href="https://finance.yahoo.com/quote/%5EDJI/" target="_blank" class="market-item">
+      <span class="market-name">Dow Jones</span>
+      <span class="market-price" id="mb-dow-price">—</span>
+      <span class="up" id="mb-dow-change">Loading...</span>
+    </a>
+  </div>
+  <p class="market-label">Loading live data...</p>
+  <script src="market.js"></script>
+
+  <div class="tools-hero">
+    <h2>Investment Tools</h2>
+    <p>Free tools to help you research stocks, build portfolios, calculate returns, and stay on top of market news.</p>
+  </div>
+
+  <section>
+    <div class="container">
+      <div class="section-box">
+
+        <div class="tab-bar">
+          <button class="tab-btn on" onclick="switchTab('screener',this)">Stock Screener</button>
+          <button class="tab-btn" onclick="switchTab('builder',this)">Portfolio Builder</button>
+          <button class="tab-btn" onclick="switchTab('calc',this)">P&amp;L Calculator</button>
+          <button class="tab-btn" onclick="switchTab('news',this)">Market News</button>
+        </div>
+
+        <!-- SCREENER -->
+        <div class="panel on" id="panel-screener">
+          <div class="filter-row">
+            <label>Sector:</label>
+            <select id="f-sector" onchange="filterStocks()">
+              <option value="">All sectors</option>
+              <option>Technology</option><option>Financial</option><option>Consumer</option>
+              <option>Automotive</option><option>Entertainment</option><option>Aerospace</option>
+              <option>Beverage</option><option>ETF</option>
+            </select>
+            <label>Min rating:</label>
+            <select id="f-rating" onchange="filterStocks()">
+              <option value="0">Any</option>
+              <option value="3">3+ stars</option>
+              <option value="4">4+ stars</option>
+              <option value="5">5 stars only</option>
+            </select>
+            <label>Sort by:</label>
+            <select id="f-sort" onchange="filterStocks()">
+              <option value="name">Name</option>
+              <option value="price">Buy price</option>
+              <option value="rating">Rating</option>
+            </select>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="stock-table">
+              <thead>
+                <tr>
+                  <th>Stock</th>
+                  <th>Sector</th>
+                  <th>Buy price</th>
+                  <th>Shares</th>
+                  <th>Cost basis</th>
+                  <th>Rating</th>
+                </tr>
+              </thead>
+              <tbody id="screener-body"></tbody>
+            </table>
+          </div>
+          <div class="count-bar" id="screener-count"></div>
+        </div>
+
+        <!-- PORTFOLIO BUILDER -->
+        <div class="panel" id="panel-builder">
+          <p style="font-size:13px;color:var(--gray);margin-bottom:16px">Enter shares and buy price to build your own custom portfolio and see your total investment.</p>
+          <div id="pb-rows"></div>
+          <div class="pb-total-bar">
+            <span>Total invested</span>
+            <strong id="pb-total">$0</strong>
+          </div>
+        </div>
+
+        <!-- P&L CALCULATOR -->
+        <div class="panel" id="panel-calc">
+          <div class="calc-grid">
+            <div class="calc-field"><label>Ticker</label><input type="text" id="c-ticker" placeholder="e.g. AAPL" oninput="calcPL()"></div>
+            <div class="calc-field"><label>Buy price ($)</label><input type="number" id="c-buy" placeholder="180.00" step="0.01" oninput="calcPL()"></div>
+            <div class="calc-field"><label>Current price ($)</label><input type="number" id="c-curr" placeholder="172.00" step="0.01" oninput="calcPL()"></div>
+            <div class="calc-field"><label>Shares</label><input type="number" id="c-shares" placeholder="10" oninput="calcPL()"></div>
+          </div>
+          <div id="calc-result" style="display:none">
+            <div class="result-grid">
+              <div class="result-card"><div class="r-label">Cost basis</div><div class="r-value" id="cr-cost">—</div></div>
+              <div class="result-card"><div class="r-label">Current value</div><div class="r-value" id="cr-val">—</div></div>
+              <div class="result-card"><div class="r-label">Gain / Loss</div><div class="r-value" id="cr-gl">—</div></div>
+              <div class="result-card"><div class="r-label">Return %</div><div class="r-value" id="cr-pct">—</div></div>
+            </div>
+          </div>
+          <div id="calc-empty" style="font-size:13px;color:var(--gray);padding:16px 0">Fill in the fields above to see your profit &amp; loss.</div>
+          <div style="margin-top:20px">
+            <p style="font-size:12px;color:var(--gray);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px;font-weight:500">Quick fill from your portfolio:</p>
+            <div class="quick-fill-grid" id="quick-fill"></div>
+          </div>
+        </div>
+
+        <!-- NEWS -->
+        <div class="panel" id="panel-news">
+          <div class="filter-row">
+            <label>Filter by stock:</label>
+            <select id="news-filter" onchange="renderNews()">
+              <option value="">All stocks</option>
+            </select>
+          </div>
+          <div id="news-container">
+            <p style="font-size:13px;color:var(--gray)">Loading latest headlines...</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Reece Scott-Hansen '28 Finance Journal | Built with HTML and CSS</p>
+    </div>
+  </footer>
+
+  <script>
+    const API = 'd7paulpr01qlb0a9cjhgd7paulpr01qlb0a9cji0';
+
+    const STOCKS = [
+      {ticker:'AAPL', name:'Apple',         sector:'Technology',    buy:180, shares:10, rating:4},
+      {ticker:'AMZN', name:'Amazon',        sector:'Technology',    buy:175, shares:8,  rating:4},
+      {ticker:'MSFT', name:'Microsoft',     sector:'Technology',    buy:420, shares:6,  rating:5},
+      {ticker:'NVDA', name:'NVIDIA',        sector:'Technology',    buy:900, shares:4,  rating:4},
+      {ticker:'GOOGL',name:'Google',        sector:'Technology',    buy:140, shares:6,  rating:5},
+      {ticker:'MS',   name:'Morgan Stanley',sector:'Financial',     buy:85,  shares:8,  rating:4},
+      {ticker:'JPM',  name:'JPMorgan',      sector:'Financial',     buy:190, shares:5,  rating:4},
+      {ticker:'NKE',  name:'Nike',          sector:'Consumer',      buy:95,  shares:12, rating:4},
+      {ticker:'KO',   name:'Coca-Cola',     sector:'Beverage',      buy:60,  shares:15, rating:4},
+      {ticker:'MCD',  name:"McDonald's",    sector:'Consumer',      buy:280, shares:7,  rating:4},
+      {ticker:'TSLA', name:'Tesla',         sector:'Automotive',    buy:250, shares:5,  rating:3},
+      {ticker:'DIS',  name:'Disney',        sector:'Entertainment', buy:110, shares:7,  rating:4},
+      {ticker:'BA',   name:'Boeing',        sector:'Aerospace',     buy:210, shares:6,  rating:3},
+      {ticker:'SPY',  name:'S&P 500 ETF',   sector:'ETF',           buy:500, shares:5,  rating:5},
+    ];
+
+    const BADGE = {
+      Technology:'b-tech', Financial:'b-fin', Consumer:'b-con',
+      Automotive:'b-ae', Entertainment:'b-ent', ETF:'b-etf',
+      Beverage:'b-con', Aerospace:'b-ae'
+    };
+
+    function stars(n){ return '★'.repeat(n)+'☆'.repeat(5-n); }
+
+    function switchTab(id, btn){
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById('panel-'+id).classList.add('on');
+    }
+
+    // SCREENER
+    function filterStocks(){
+      const sec  = document.getElementById('f-sector').value;
+      const minR = parseInt(document.getElementById('f-rating').value)||0;
+      const sort = document.getElementById('f-sort').value;
+      let list = STOCKS.filter(s=>(!sec||s.sector===sec)&&s.rating>=minR);
+      if(sort==='price')  list.sort((a,b)=>a.buy-b.buy);
+      else if(sort==='rating') list.sort((a,b)=>b.rating-a.rating);
+      else list.sort((a,b)=>a.name.localeCompare(b.name));
+      document.getElementById('screener-body').innerHTML = list.map(s=>`
+        <tr>
+          <td><strong>${s.name}</strong><br><span style="font-size:11px;color:var(--gray)">${s.ticker}</span></td>
+          <td><span class="s-badge ${BADGE[s.sector]||'b-etf'}">${s.sector}</span></td>
+          <td>$${s.buy.toLocaleString()}</td>
+          <td>${s.shares}</td>
+          <td>$${(s.buy*s.shares).toLocaleString()}</td>
+          <td><span class="stars">${stars(s.rating)}</span></td>
+        </tr>
+      `).join('');
+      document.getElementById('screener-count').textContent = `Showing ${list.length} of ${STOCKS.length} stocks`;
+    }
+    filterStocks();
+
+    // PORTFOLIO BUILDER
+    function buildPBRows(){
+      document.getElementById('pb-rows').innerHTML = STOCKS.map((s,i)=>`
+        <div class="pb-item">
+          <span class="t-name">${s.ticker}</span>
+          <input type="number" id="pb-sh-${i}" value="0" min="0" placeholder="Shares" oninput="updatePB()">
+          <input type="number" id="pb-pr-${i}" value="${s.buy}" step="0.01" placeholder="Price" oninput="updatePB()">
+          <span class="pb-val" id="pb-val-${i}">$0</span>
+        </div>
+      `).join('');
+    }
+
+    function updatePB(){
+      let total=0;
+      STOCKS.forEach((s,i)=>{
+        const sh=parseFloat(document.getElementById(`pb-sh-${i}`).value)||0;
+        const pr=parseFloat(document.getElementById(`pb-pr-${i}`).value)||0;
+        const v=sh*pr; total+=v;
+        document.getElementById(`pb-val-${i}`).textContent='$'+v.toLocaleString('en-US',{maximumFractionDigits:0});
+      });
+      document.getElementById('pb-total').textContent='$'+total.toLocaleString('en-US',{maximumFractionDigits:0});
+    }
+    buildPBRows();
+
+    // P&L CALCULATOR
+    function calcPL(){
+      const buy=parseFloat(document.getElementById('c-buy').value);
+      const curr=parseFloat(document.getElementById('c-curr').value);
+      const sh=parseFloat(document.getElementById('c-shares').value);
+      const res=document.getElementById('calc-result');
+      const emp=document.getElementById('calc-empty');
+      if(!buy||!curr||!sh||isNaN(buy)||isNaN(curr)||isNaN(sh)){
+        res.style.display='none'; emp.style.display='block'; return;
+      }
+      const cost=buy*sh, val=curr*sh, gl=val-cost, pct=gl/cost*100, up=gl>=0;
+      res.style.display='block'; emp.style.display='none';
+      document.getElementById('cr-cost').textContent='$'+cost.toLocaleString('en-US',{maximumFractionDigits:2});
+      document.getElementById('cr-val').textContent='$'+val.toLocaleString('en-US',{maximumFractionDigits:2});
+      document.getElementById('cr-gl').innerHTML=`<span class="${up?'g':'r'}">${up?'+':'-'}$${Math.abs(gl).toFixed(2)}</span>`;
+      document.getElementById('cr-pct').innerHTML=`<span class="${up?'g':'r'}">${up?'+':''}${pct.toFixed(2)}%</span>`;
+    }
+
+    function buildQuickFill(){
+      document.getElementById('quick-fill').innerHTML = STOCKS.map(s=>
+        `<button class="qf-btn" onclick="qfill('${s.ticker}',${s.buy},${s.shares})">${s.ticker}</button>`
+      ).join('');
+    }
+
+    function qfill(t,b,sh){
+      document.getElementById('c-ticker').value=t;
+      document.getElementById('c-buy').value=b;
+      document.getElementById('c-shares').value=sh;
+      document.getElementById('c-curr').value='';
+      switchTab('calc',document.querySelectorAll('.tab-btn')[2]);
+      calcPL();
+    }
+    buildQuickFill();
+
+    // NEWS
+    let allNews=[];
+    async function loadNews(){
+      const tickers=['AAPL','MSFT','NVDA','GOOGL','TSLA','JPM','AMZN'];
+      const sel=document.getElementById('news-filter');
+      tickers.forEach(t=>{ const o=document.createElement('option'); o.value=t; o.textContent=t; sel.appendChild(o); });
+      try{
+        const results=await Promise.all(tickers.slice(0,5).map(t=>
+          fetch(`https://finnhub.io/api/v1/company-news?symbol=${t}&from=2026-04-01&to=2026-04-30&token=${API}`)
+            .then(r=>r.json()).then(arr=>(arr||[]).slice(0,4).map(n=>({...n,ticker:t})))
+        ));
+        allNews=results.flat().sort((a,b)=>b.datetime-a.datetime);
+        renderNews();
+      }catch(e){
+        document.getElementById('news-container').innerHTML='<p style="color:var(--gray);font-size:13px">Could not load news — check API connection.</p>';
+      }
+    }
+
+    function renderNews(){
+      const filter=document.getElementById('news-filter').value;
+      const list=filter?allNews.filter(n=>n.ticker===filter):allNews;
+      if(!list.length){ document.getElementById('news-container').innerHTML='<p style="color:var(--gray);font-size:13px">No headlines found.</p>'; return; }
+      document.getElementById('news-container').innerHTML=list.slice(0,15).map(n=>{
+        const dt=new Date(n.datetime*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+        return `<div class="news-item">
+          <div class="news-headline"><a href="${n.url}" target="_blank">${n.headline}</a></div>
+          <div class="news-meta"><span class="news-ticker-tag">${n.ticker}</span>${n.source} · ${dt}</div>
+        </div>`;
+      }).join('');
+    }
+
+    loadNews();
+  </script>
+
+</body>
+</html>
